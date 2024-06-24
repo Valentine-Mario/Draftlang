@@ -33,7 +33,7 @@ To execute functions we can then call the command that exposes the `draftlang` f
 `draftlang exec makeFile parallelRun`
 
 This repository would contain
-- `asft-util`: A custom wrapper for the [ASDF CLI] (https://asdf-vm.com/) tool which would be vital for runtime managment
+- `asdf-util`: A custom wrapper for the [ASDF CLI](https://asdf-vm.com/) tool which would be vital for runtime managment
 
 - `draftlang-parser`: This workspace should contain the grammer parser and lexical analysis of the token.
 

@@ -1,0 +1,10 @@
+workspace = { members = [ "asdf-util","draftlang-executor", "draftlang-parser"] }
+[package]
+name = "draftlang"
+version = "0.1.0"
+edition = "2021"
+
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
