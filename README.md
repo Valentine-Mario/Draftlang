@@ -4,7 +4,7 @@ Draftlang is a functional programming languaue that allow users to expose custom
 
 ```
 [draft]
-import utils::{mkfile, rmFile}
+import {mkfile, remFile} from core::utils
 
 func createFile(){
     mkfile("app.txt")
