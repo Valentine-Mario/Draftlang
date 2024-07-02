@@ -1,5 +1,5 @@
 [workspace] 
-members = [ "asdf-util","draftlang-executor", "draftlang-parser"] 
+members = [ "asdf-util","draftlang-executor", "draftlang-parser", "error"] 
 
 
 [package]

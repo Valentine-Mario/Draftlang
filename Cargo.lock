@@ -7,6 +7,7 @@ name = "asdf-util"
 version = "0.1.0"
 dependencies = [
  "color-print",
+ "draftlang_error",
  "which",
 ]
 
@@ -47,6 +48,10 @@ version = "0.1.0"
 
 [[package]]
 name = "draftlang-parser"
+version = "0.1.0"
+
+[[package]]
+name = "draftlang_error"
 version = "0.1.0"
 
 [[package]]
