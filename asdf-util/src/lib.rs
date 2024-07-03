@@ -1,31 +1,16 @@
 pub mod types;
-
+pub mod util;
 
 use draftlang_error::Error;
-use which::which;
 use types::ASDFCommand;
 
 const BINCOMMAND: &str = "asdf";
 
-pub fn string_to_static_str(s: String) -> &'static str {
-    Box::leak(s.into_boxed_str())
-}
-
-pub fn check_asdf() -> Result<(), Error> {
-    match which(BINCOMMAND) {
-        Ok(_) => return Ok(()),
-        Err(e) => {
-            let error_msg = format!("{:?}", e);
-            return Err(Error::ASDFNotFound(string_to_static_str(error_msg)));
-        }
-    }
-}
-
-
-pub fn exec_command(option: &ASDFCommand){
+pub fn exec_command(option: &ASDFCommand) -> Result<(), Error> {
+    util::check_asdf()?;
     use ASDFCommand::*;
     match option {
-        PLUGIN(_)=>todo!(),
+        PLUGIN(_) => todo!(),
         CURRENT(_) => todo!(),
         GLOBAL(_) => todo!(),
         HELP(_) => todo!(),

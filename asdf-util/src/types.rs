@@ -18,5 +18,5 @@ pub enum ASDFCommand<'a> {
     RESHIM(&'a str),
     SHIMVERSION(&'a str),
     UPDATE,
-    UPDATEHEAD
+    UPDATEHEAD,
 }

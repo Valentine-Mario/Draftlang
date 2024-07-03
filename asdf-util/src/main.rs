@@ -1,11 +1,4 @@
-use asdf_util::check_asdf;
-use color_print::cprintln;
-
+use asdf_util::util::run_cmd;
 fn main() {
-    match check_asdf() {
-        Ok(_) => {}
-        Err(val) => {
-            cprintln!("<red>{:?}<red>", val)
-        }
-    }
+    run_cmd(vec!["plugin"]).unwrap();
 }
