@@ -1,4 +1,5 @@
-use asdf_util::util::run_cmd;
+use asdf_util::util::exec_stream;
 fn main() {
-    run_cmd(vec!["plugin"]).unwrap();
+    //run_cmd(vec!["plugin"]).unwrap();
+    exec_stream(vec!["plugin", "list", "--urls"]);
 }
