@@ -13,10 +13,7 @@ pub fn plugin_cmd(cmd: &str) -> Result<CommandReturnType, Error> {
         args.insert(0, "plugin");
         //use exec_stream for add and update since they are long running commands
         if args[1].trim() == "add" || args[1].trim() == "update" {
-            match exec_stream(&args) {
-                Ok(_) => Ok(CommandReturnType::Empty),
-                Err(e) => Err(e),
-            }
+            exec_stream(&args)
         } else {
             match run_cmd(&args) {
                 Ok(cmd_return_string) => {
