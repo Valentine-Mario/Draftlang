@@ -1,16 +1,17 @@
+pub mod commands;
 pub mod types;
 pub mod util;
 
 use draftlang_error::Error;
-use types::ASDFCommand;
+use types::{ASDFCommand, CommandReturnType};
 
 const BINCOMMAND: &str = "asdf";
 
-pub fn exec_command(option: &ASDFCommand) -> Result<(), Error> {
+pub fn asdf_command(option: &ASDFCommand) -> Result<CommandReturnType, Error> {
     util::check_asdf()?;
     use ASDFCommand::*;
     match option {
-        PLUGIN(_) => todo!(),
+        PLUGIN(cmd) => commands::plugin_cmd(cmd),
         CURRENT(_) => todo!(),
         GLOBAL(_) => todo!(),
         HELP(_) => todo!(),

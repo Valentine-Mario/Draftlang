@@ -3,6 +3,7 @@ use std::fmt;
 pub enum Error {
     ASDFNotFound(&'static str),
     ASDFCmdError(&'static str),
+    NullError,
 }
 
 #[allow(unreachable_patterns)]
@@ -15,7 +16,7 @@ impl fmt::Debug for Error {
                 ele)
             }
             Error::ASDFCmdError(ele) => write!(f, "Error running ASDF command {}", ele),
-            _ => write!(f, "{:?}", self), // For any variant not previously covered
+            _ => write!(f, "{:?}", self::Error::NullError), // For any variant not previously covered
         }
     }
 }

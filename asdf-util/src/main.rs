@@ -1,5 +1,6 @@
-use asdf_util::util::exec_stream;
+use asdf_util::{asdf_command, types::ASDFCommand};
+
 fn main() {
-    //run_cmd(vec!["plugin"]).unwrap();
-    exec_stream(vec!["plugin", "list", "--urls"]);
+    let a = ASDFCommand::PLUGIN("update --all");
+    asdf_command(&a).unwrap();
 }
