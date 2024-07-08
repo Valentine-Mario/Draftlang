@@ -40,7 +40,7 @@ pub fn exec_stream(args: &Vec<&str>) -> Result<String, Error> {
 
                 for line in stdout_lines {
                     let str_line = line.expect("error reading line");
-                    cprintln!("<green><bold>{:?}<bold><green>", str_line);
+                    cprintln!("<green><bold>{}<bold><green>", str_line);
                     return_string.push_str(&str_line);
                     return_string.push('\n');
                 }

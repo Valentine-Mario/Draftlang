@@ -1,6 +1,6 @@
-use asdf_util::{asdf_command, types::ASDFCommand};
+use asdf_util::{asdf, types::ASDFCommand};
 
 fn main() {
-    let a = ASDFCommand::CURRENT("erlang");
-    println!("returned => {}", asdf_command(&a).unwrap());
+    let a = ASDFCommand::VERSION;
+    println!("returned => {}", asdf(&a).unwrap());
 }
