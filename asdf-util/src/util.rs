@@ -5,16 +5,19 @@ use std::process::Command;
 use std::process::Stdio;
 use which::which;
 
-use crate::types::CommandReturnType;
 use crate::BINCOMMAND;
 
 pub fn string_to_static_str(s: String) -> &'static str {
     Box::leak(s.into_boxed_str())
 }
 
-pub fn check_asdf() -> Result<CommandReturnType, Error> {
+pub fn split_str(cmd: &str) -> Vec<&str> {
+    cmd.split(' ').collect()
+}
+
+pub fn check_asdf() -> Result<(), Error> {
     match which(BINCOMMAND) {
-        Ok(_) => Ok(CommandReturnType::Empty),
+        Ok(_) => Ok(()),
         Err(e) => {
             let error_msg = format!("{:?}", e);
             Err(Error::ASDFNotFound(string_to_static_str(error_msg)))
@@ -22,21 +25,8 @@ pub fn check_asdf() -> Result<CommandReturnType, Error> {
     }
 }
 
-//use this for short running commands
-pub fn run_cmd(args: &Vec<&str>) -> Result<CommandReturnType, Error> {
-    match Command::new(BINCOMMAND).args(args).output() {
-        Ok(output) => Ok(CommandReturnType::CmdString(
-            String::from_utf8_lossy(&output.stdout).to_string(),
-        )),
-        Err(e) => {
-            let error_msg = format!("{:?}", e);
-            Err(Error::ASDFCmdError(string_to_static_str(error_msg)))
-        }
-    }
-}
-
-//use this for long running commands eg install, uninstall, etc
-pub fn exec_stream(args: &Vec<&str>) -> Result<CommandReturnType, Error> {
+pub fn exec_stream(args: &Vec<&str>) -> Result<String, Error> {
+    let mut return_string: String = String::from("");
     match Command::new(BINCOMMAND)
         .args(args)
         .stdout(Stdio::piped())
@@ -49,10 +39,10 @@ pub fn exec_stream(args: &Vec<&str>) -> Result<CommandReturnType, Error> {
                 let stdout_lines = stdout_reader.lines();
 
                 for line in stdout_lines {
-                    cprintln!(
-                        "<green><bold>{:?}<bold><green>",
-                        line.expect("error reading line")
-                    );
+                    let str_line = line.expect("error reading line");
+                    cprintln!("<green><bold>{:?}<bold><green>", str_line);
+                    return_string.push_str(&str_line);
+                    return_string.push('\n');
                 }
             }
 
@@ -60,7 +50,7 @@ pub fn exec_stream(args: &Vec<&str>) -> Result<CommandReturnType, Error> {
                 Ok(data) => {
                     cprintln!("<green><bold>{}<bold><green>", data);
                     if data.success() {
-                        Ok(CommandReturnType::Empty)
+                        Ok(return_string)
                     } else {
                         Err(Error::ASDFCmdError(string_to_static_str("".to_string())))
                     }

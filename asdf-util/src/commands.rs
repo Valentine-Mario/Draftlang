@@ -1,37 +1,27 @@
 use color_print::cprintln;
 use draftlang_error::Error;
 
-use crate::{
-    types::CommandReturnType,
-    util::{exec_stream, run_cmd, string_to_static_str},
-};
+use crate::util::{exec_stream, split_str, string_to_static_str};
 
-pub fn plugin_cmd(cmd: &str) -> Result<CommandReturnType, Error> {
-    let mut args: Vec<&str> = cmd.split(' ').collect();
+pub fn plugin_cmd(cmd: &str) -> Result<String, Error> {
+    let mut args = split_str(cmd);
     if args.len() > 1 {
         //append plugin to the top of the vector
         args.insert(0, "plugin");
-        //use exec_stream for add and update since they are long running commands
-        if args[1].trim() == "add" || args[1].trim() == "update" {
-            exec_stream(&args)
-        } else {
-            match run_cmd(&args) {
-                Ok(cmd_return_string) => {
-                    match cmd_return_string {
-                        CommandReturnType::CmdString(data) => {
-                            cprintln!("<green><bold>{}<bold><green>", data)
-                        }
-                        CommandReturnType::Empty => {}
-                    }
-                    Ok(CommandReturnType::Empty)
-                }
-                Err(e) => Err(e),
-            }
-        }
+        exec_stream(&args)
     } else {
         cprintln!("<red>Invalid number of command arguments<red>");
         Err(Error::ASDFCmdError(string_to_static_str(
             "Invalid number of args".to_string(),
         )))
     }
+}
+
+pub fn current_cmd(cmd: &str) -> Result<String, Error> {
+    let mut args = split_str(cmd);
+    if args.len() == 1 && args[0].trim() == "" {
+        args.pop();
+    }
+    args.insert(0, "current");
+    exec_stream(&args)
 }

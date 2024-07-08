@@ -20,8 +20,3 @@ pub enum ASDFCommand<'a> {
     UPDATE,
     UPDATEHEAD,
 }
-
-pub enum CommandReturnType {
-    CmdString(String),
-    Empty,
-}
