@@ -1,0 +1,69 @@
+WHITESPACE= _{" "| "\t" | "\r"| "\n"}
+COMMENT = _{ "#" ~ (!"\n" ~ ANY)* }
+
+//verbs
+verbs = {  "|>"| ">"| "<" | "+" |  "&&" | "||" | ">=" | "<="}
+
+reserver_words= {
+    (
+    "func" | "import" | "from"| "return" | "break" | "in" | 
+    "if" | "else" | "nil" | "true" | "false"
+    )
+}
+
+var_name= @{(ASCII_ALPHA ~ (ASCII_ALPHANUMERIC | "_" | "?")*)}
+
+ident = @{ !(reserver_words ~ !ASCII_ALPHANUMERIC) ~ var_name}
+number = @{
+    "-"?
+    ~ ("0"| ASCII_NONZERO_DIGIT ~ ASCII_DIGIT*)
+    ~ ("." ~ ASCII_DIGIT*)?
+    ~ (^"e" ~ ("+"|"-")? ~ ASCII_DIGIT+)?
+}
+string = @{"\"" ~ inner ~ "\""}
+inner = @{char*}
+char = {
+    !("\"" | "\\") ~ ANY
+    | "\\" ~ ("\"" | "\\"| "/" | "b" | "f" | "n" | "r" | "t")
+    | "\\" ~ ("u" ~ ASCII_HEX_DIGIT{4,})
+}
+
+single_quote_string= @{"'" ~ single_inner ~ "'"}
+single_inner = @{single_quote_char*}
+single_quote_char = {
+    |!("\'"| "\\") ~ ANY
+    | "\\" ~ ("'" | "\\"| "/" | "b" | "f" | "n" | "r" | "t")
+    | "\\" ~ ("u" ~ ASCII_HEX_DIGIT{4,})
+}
+
+boolean = {"true"| "false"}
+null = {"nil"}
+array= {
+    "["~"]" | "[" ~ (types | ident ) ~ ("," ~ (types|ident))* ~ ","? ~"]"
+}
+
+map_item= {
+    (ident|types) ~ ":" ~ (ident|types)
+}
+map = {
+    "%{"~"}"|"%{" (map_item) ~ 
+    ("," ~ (map_item))* ~ ","? ~ "}"
+}
+
+//valid draflang types
+types = { 
+    number 
+    | string 
+    | boolean 
+    | array 
+    | single_quote_string
+    | null
+  }
+
+//var expression
+assignment = {ident ~ "=" ~ (types|ident)}
+
+//expressions
+expr = {assignment}
+draft_lang = {"[draft]" ~ expr ~ "[/draft]" ~ "[json]" ~ ANY* ~ "[/json]"}
+program= _{ SOI ~ draft_lang ~ EOI}

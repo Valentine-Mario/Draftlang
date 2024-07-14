@@ -16,7 +16,7 @@ func renameFile(){
 
 [/draft]
 
-[exec]
+[json]
 
 {
     "makeFile":"createFile()",
@@ -24,7 +24,7 @@ func renameFile(){
     "parallelRun":"createFile() || renameFile()"
 }
 
-[/exec]
+[/json]
 
 ```
 
