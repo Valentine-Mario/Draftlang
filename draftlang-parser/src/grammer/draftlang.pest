@@ -68,6 +68,11 @@ assignment = {ident ~ "=" ~ (types|ident)}
 import_stat= {"import" ~ ident ~ ("," ~ ident)* ~ "from" ~  module_call }
 //expressions
 expr = {assignment|import_stat}
-json_expr = { ANY* }
-draft_lang = {"[draft]" ~ expr* ~ "[draft]" ~ json_expr }
+json_object = { 
+    "{" ~ "}" | "{" ~ json_pair ~ ("," ~ json_pair)* ~ "}"
+}
+json_pair= {string ~ ":" ~ string}
+
+
+draft_lang = {json_object? ~ "[draft]" ~ expr* ~ "[draft]" ~ json_object? }
 program= _{ SOI ~ draft_lang ~ EOI}
