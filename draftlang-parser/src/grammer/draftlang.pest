@@ -7,7 +7,7 @@ verbs = {  "|>"| ">"| "<" | "+" |  "&&" | "||" | ">=" | "<="}
 reserver_words= {
     (
     "func" | "import" | "from"| "return" | "break" | "in" | 
-    "if" | "else" | "nil" | "true" | "false"
+    "if" | "else" | "nil" | "true" | "false"|"import"
     )
 }
 
@@ -46,9 +46,10 @@ map_item= {
     (ident|types) ~ ":" ~ (ident|types)
 }
 map = {
-    "%{"~"}"|"%{" (map_item) ~ 
-    ("," ~ (map_item))* ~ ","? ~ "}"
+    "%{"~"}"|"%{" ~ map_item ~ 
+    ("," ~ map_item)* ~ ","? ~ "}"
 }
+module_call = {ident ~ ("::" ~ ident)*}
 
 //valid draflang types
 types = { 
@@ -63,7 +64,10 @@ types = {
 //var expression
 assignment = {ident ~ "=" ~ (types|ident)}
 
+//import expression
+import_stat= {"import" ~ ident ~ ("," ~ ident)* ~ "from" ~  module_call }
 //expressions
-expr = {assignment}
-draft_lang = {"[draft]" ~ expr ~ "[/draft]" ~ "[json]" ~ ANY* ~ "[/json]"}
+expr = {assignment|import_stat}
+json_expr = { ANY* }
+draft_lang = {"[draft]" ~ expr* ~ "[draft]" ~ json_expr }
 program= _{ SOI ~ draft_lang ~ EOI}

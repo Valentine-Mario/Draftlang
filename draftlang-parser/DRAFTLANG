@@ -1,0 +1,12 @@
+[draft]
+import mkfile, rmfile from core::app
+
+im=100
+b=["hello", "world"]
+[draft]
+
+
+{
+    "hello": "world"
+    "you": "get"
+}
