@@ -14,6 +14,11 @@ load()
 func batch(){
    add(1, 5) |> batch() |> kid()
    blind()
+   120
+   lady = %{
+      "hello":1
+   }
+   "boy" + "girl"
    return "boy"
 }
 

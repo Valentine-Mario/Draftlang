@@ -64,10 +64,15 @@ types = {
   }
 
 //var expression
-assignment = {ident ~ "=" ~ (types|ident)}
+assignment = {ident ~ "=" ~ (types|ident|str_concat|func_call)}
 
 //inline expression
-inline_expr = {assignment | types | func_call | return_statement | for_loop}
+inline_expr = {assignment | func_call | return_statement | for_loop | str_concat}
+
+//string concat
+str_concat = { (string|single_quote_string) ~ 
+    "+" ~ (string|single_quote_string) ~ 
+    ("+" ~ (string|single_quote_string))*}
 
 //import expression
 import_stat= {"import" ~ ident ~ ("," ~ ident)* ~ "from" ~  module_call }
@@ -77,13 +82,15 @@ return_statement = {"return" ~ (ident | types | func_call)}
 func_param = {"(" ~ ")" | "(" ~ (ident|types) ~ ("," ~ (ident|types))* ~ ")"}
 func_expression = {
         "func" ~ ident ~ 
-        func_param ~ "{" ~ inline_expr* ~ "}"
+        func_param ~ "{" ~ (inline_expr|types)* ~ "}"
                 }
 
 func_call = {ident ~ func_param ~ ("|>" ~ ident ~ func_param)*}
 
 //for loop
-for_loop = {"for" ~ ident ~ "," ~ ident ~ "in" ~ (ident|types) ~ "{" ~ inline_expr* ~ "}" }
+for_loop = {"for" ~ ident ~ "," ~ ident ~ "in" ~ (ident|types) ~ 
+        "{" ~ (inline_expr|types)* ~ 
+            "}" }
 
 //expressions
 expr = {assignment|import_stat|func_expression}
