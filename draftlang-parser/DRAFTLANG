@@ -1,9 +1,16 @@
-
 [draft]
-import mkfile, rmfile from core::app
+k="boy"
+func add(a, b){
+l=11
+k="guy"
+load()
+}
 
-im=100
-b=["hello", "world"]
+func batch(){
+   add(1, 5) |> batch() |> kid()
+   blind()
+}
+
 [draft]
 
 {

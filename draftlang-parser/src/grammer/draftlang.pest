@@ -7,7 +7,7 @@ verbs = {  "|>"| ">"| "<" | "+" |  "&&" | "||" | ">=" | "<="}
 reserver_words= {
     (
     "func" | "import" | "from"| "return" | "break" | "in" | 
-    "if" | "else" | "nil" | "true" | "false"|"import"
+    "if" | "else" | "nil" | "true" | "false"|"import" | "and" | "or"
     )
 }
 
@@ -43,7 +43,7 @@ array= {
 }
 
 map_item= {
-    (ident|types) ~ ":" ~ (ident|types)
+    (string | single_quote_string) ~ ":" ~ (ident|types)
 }
 map = {
     "%{"~"}"|"%{" ~ map_item ~ 
@@ -58,6 +58,7 @@ types = {
     | boolean 
     | array 
     | single_quote_string
+    | map
     | null
   }
 
@@ -66,8 +67,19 @@ assignment = {ident ~ "=" ~ (types|ident)}
 
 //import expression
 import_stat= {"import" ~ ident ~ ("," ~ ident)* ~ "from" ~  module_call }
+
+//function expression
+func_param = {"(" ~ ")" | "(" ~ (ident|types) ~ ("," ~ (ident|types))* ~ ")"}
+func_expression = {"func" ~ ident ~ 
+    func_param ~ "{" ~ 
+        (assignment | types | func_call )* 
+        ~ "}"
+    }
+
+func_call = {ident ~ func_param ~ ("|>" ~ ident ~ func_param)*}
+
 //expressions
-expr = {assignment|import_stat}
+expr = {assignment|import_stat|func_expression}
 json_object = { 
     "{" ~ "}" | "{" ~ json_pair ~ ("," ~ json_pair)* ~ "}"
 }
