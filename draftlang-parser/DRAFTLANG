@@ -5,7 +5,10 @@ k="boy"
 func add(a, b){
 l=11
 k="guy"
+
+for i, j in value{
 load()
+}
 }
 
 func batch(){

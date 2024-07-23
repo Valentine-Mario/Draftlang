@@ -8,7 +8,7 @@ reserver_words= {
     (
     "func" | "import" | "from"| "return" | "break" | "in" | 
     "if" | "else" | "nil" | "true" | "false"|"import" | "and" | "or"
-    | "draft"
+    | "draft" | "for"
     )
 }
 
@@ -66,19 +66,24 @@ types = {
 //var expression
 assignment = {ident ~ "=" ~ (types|ident)}
 
+//inline expression
+inline_expr = {assignment | types | func_call | return_statement | for_loop}
+
 //import expression
 import_stat= {"import" ~ ident ~ ("," ~ ident)* ~ "from" ~  module_call }
 
 //function expression
 return_statement = {"return" ~ (ident | types | func_call)}
 func_param = {"(" ~ ")" | "(" ~ (ident|types) ~ ("," ~ (ident|types))* ~ ")"}
-func_expression = {"func" ~ ident ~ 
-    func_param ~ "{" ~ 
-        (assignment | types | func_call | return_statement )* 
-        ~ "}"
-    }
+func_expression = {
+        "func" ~ ident ~ 
+        func_param ~ "{" ~ inline_expr* ~ "}"
+                }
 
 func_call = {ident ~ func_param ~ ("|>" ~ ident ~ func_param)*}
+
+//for loop
+for_loop = {"for" ~ ident ~ "," ~ ident ~ "in" ~ (ident|types) ~ "{" ~ inline_expr* ~ "}" }
 
 //expressions
 expr = {assignment|import_stat|func_expression}
