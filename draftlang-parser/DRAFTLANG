@@ -1,4 +1,6 @@
 [draft]
+import mkdir, mkfile from core::file
+# this is a comment
 k="boy"
 func add(a, b){
 l=11
@@ -9,6 +11,7 @@ load()
 func batch(){
    add(1, 5) |> batch() |> kid()
    blind()
+   return "boy"
 }
 
 [draft]

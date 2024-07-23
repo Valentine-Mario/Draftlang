@@ -8,6 +8,7 @@ reserver_words= {
     (
     "func" | "import" | "from"| "return" | "break" | "in" | 
     "if" | "else" | "nil" | "true" | "false"|"import" | "and" | "or"
+    | "draft"
     )
 }
 
@@ -69,10 +70,11 @@ assignment = {ident ~ "=" ~ (types|ident)}
 import_stat= {"import" ~ ident ~ ("," ~ ident)* ~ "from" ~  module_call }
 
 //function expression
+return_statement = {"return" ~ (ident | types | func_call)}
 func_param = {"(" ~ ")" | "(" ~ (ident|types) ~ ("," ~ (ident|types))* ~ ")"}
 func_expression = {"func" ~ ident ~ 
     func_param ~ "{" ~ 
-        (assignment | types | func_call )* 
+        (assignment | types | func_call | return_statement )* 
         ~ "}"
     }
 
