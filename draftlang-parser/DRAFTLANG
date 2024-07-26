@@ -19,6 +19,15 @@ func batch(){
       "hello":1
    }
    "boy" + "girl"
+   if( a and b != c){
+      l="boy"
+   }elif(a){
+
+   }elif(b){
+
+   }else{
+      
+   }
    return "boy"
 }
 

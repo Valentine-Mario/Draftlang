@@ -2,12 +2,12 @@ WHITESPACE= _{" "| "\t" | "\r"| "\n"}
 COMMENT = _{ "#" ~ (!"\n" ~ ANY)* }
 
 //verbs
-verbs = {  "|>"| ">"| "<" | "+" |  "&&" | "||" | ">=" | "<="}
+verbs = {  "|>"| "!=" | ">=" | "<=" | ">"| "<" | "+" |  "&&" | "||" |  "=="}
 
 reserver_words= {
     (
     "func" | "import" | "from"| "return" | "break" | "in" | 
-    "if" | "else" | "nil" | "true" | "false"|"import" | "and" | "or"
+    "if" | "else" | "elif"| "nil" | "true" | "false"|"import" | "and" | "or"
     | "draft" | "for"
     )
 }
@@ -67,7 +67,7 @@ types = {
 assignment = {ident ~ "=" ~ (types|ident|str_concat|func_call)}
 
 //inline expression
-inline_expr = {assignment | func_call | return_statement | for_loop | str_concat}
+inline_expr = {assignment | func_call | return_statement | for_loop | str_concat | if_statement}
 
 //string concat
 str_concat = { (string|single_quote_string) ~ 
@@ -85,12 +85,24 @@ func_expression = {
         func_param ~ "{" ~ (inline_expr|types)* ~ "}"
                 }
 
-func_call = {ident ~ func_param ~ ("|>" ~ ident ~ func_param)*}
+func_call = {ident ~ func_param ~ (verbs ~ ident ~ func_param)*}
 
 //for loop
 for_loop = {"for" ~ ident ~ "," ~ ident ~ "in" ~ (ident|types) ~ 
         "{" ~ (inline_expr|types)* ~ 
             "}" }
+
+
+
+//if expression
+cond_type = {"and" | "or"}
+cond_expr = { ident | func_call | types}
+cond = { (cond_expr ~ verbs ~ cond_expr) | cond_expr}
+cond_statement = {"(" ~ cond ~ (cond_type ~ cond)* ~ ")"}
+if_statement = {"if" ~ cond_statement ~ "{" ~ (inline_expr|types)* ~ "}" ~ else_if_statement* ~ else_statement?}
+else_if_statement = {"elif" ~ cond_statement ~ "{" ~ (inline_expr|types)* ~ "}"}
+else_statement = {"else" ~ "{" ~ (inline_expr|types)* ~ "}"}
+
 
 //expressions
 expr = {assignment|import_stat|func_expression}
