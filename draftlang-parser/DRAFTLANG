@@ -23,10 +23,12 @@ func batch(){
       l="boy"
    }elif(a){
 
-   }elif(b){
+   }elif(false){
 
    }else{
-      
+      if (c){
+         
+      }
    }
    return "boy"
 }

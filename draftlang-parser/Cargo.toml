@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 pest = "2.6"
 pest_derive = "2.6"
+serde_json =  {workspace = true}
