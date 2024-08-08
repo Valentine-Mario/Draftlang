@@ -5,11 +5,11 @@ use crate::json::JSONValue;
 #[derive(Debug, Clone)]
 pub struct DraftLangAst {
     pub json: JSONValue,
-    pub script: HashMap<String, AstNode>,
+    pub script: HashMap<String, Vec<AstNode>>,
 }
 
 impl DraftLangAst {
-    pub fn new(data: HashMap<String, String>, script: HashMap<String, AstNode>) -> Self {
+    pub fn new(data: HashMap<String, String>, script: HashMap<String, Vec<AstNode>>) -> Self {
         DraftLangAst {
             json: JSONValue { data },
             script,
