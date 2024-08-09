@@ -94,6 +94,7 @@ version = "0.1.0"
 name = "draftlang-parser"
 version = "0.1.0"
 dependencies = [
+ "color-print",
  "pest",
  "pest_derive",
  "serde_json",

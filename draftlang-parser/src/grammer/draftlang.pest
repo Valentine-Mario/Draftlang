@@ -50,7 +50,7 @@ map = {
     "%{"~"}"|"%{" ~ map_item ~ 
     ("," ~ map_item)* ~ ","? ~ "}"
 }
-module_call = {ident ~ ("::" ~ ident)*}
+module_call = {ident ~ "::" ~ ident}
 
 //valid draflang types
 types = { 

@@ -18,6 +18,7 @@ func batch(){
    lady = %{
       "hello":1
    }
+   %{}
    "boy" + "girl"
    if( a and b != c){
       l="boy"
@@ -37,5 +38,6 @@ func batch(){
 
 {
    "hello":"world",
-   "get":"well() || later()"
+   "get":"well() || later()",
+   "my": "goat"
 }
