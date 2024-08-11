@@ -7,10 +7,10 @@ pub fn parse_script(pair: Pair<Rule>) -> AstNode {
         Rule::ident => AstNode::Ident(pair.as_str().to_string()),
         Rule::assignment => {
             let mut inner_rules = pair.into_inner();
-            let ident = inner_rules.next().unwrap().as_str();
+            let ident = parse_script(inner_rules.next().unwrap());
             let value = parse_script(inner_rules.next().unwrap());
             AstNode::Assignment {
-                ident: ident.to_string(),
+                ident: Box::new(ident),
                 expr: Box::new(value),
             }
         }

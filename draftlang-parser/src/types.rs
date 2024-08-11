@@ -59,7 +59,7 @@ pub enum AstNode {
     Boolean(bool),
     Return(Box<AstNode>),
     Assignment {
-        ident: String,
+        ident: Box<AstNode>,
         expr: Box<AstNode>,
     },
     Import {
