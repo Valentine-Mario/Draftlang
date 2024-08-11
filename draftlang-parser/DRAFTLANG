@@ -2,6 +2,8 @@
 import mkdir, mkfile from core::file
 # this is a comment
 k="boy"
+low =23
+boys = ["value", 34, [false, nil]]
 func add(a, b){
 l=11
 k="guy"

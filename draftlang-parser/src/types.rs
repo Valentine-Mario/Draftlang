@@ -37,13 +37,12 @@ pub struct IfExpr {
     pub(crate) fallback: Vec<AstNode>,
 }
 
-
 ///Condition follow the patter (identifier, optional_verb, optional identifer)
-/// Followed by an `and` or `or` verb, then another condition which follows the 
+/// Followed by an `and` or `or` verb, then another condition which follows the
 /// same structure. Thus the `next` field
 #[derive(Debug, Clone)]
 pub struct Condition {
-    pub(crate)  item: (AstNode, Option<Verb>, Option<AstNode>),
+    pub(crate) item: (AstNode, Option<Verb>, Option<AstNode>),
     pub(crate) condition: Option<Verb>,
     pub(crate) next: Option<Box<Condition>>,
 }
@@ -60,7 +59,7 @@ pub enum AstNode {
     Boolean(bool),
     Return(Box<AstNode>),
     Assignment {
-        ident: Box<AstNode>,
+        ident: String,
         expr: Box<AstNode>,
     },
     Import {
