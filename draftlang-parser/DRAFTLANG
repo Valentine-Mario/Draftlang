@@ -12,7 +12,7 @@ load()
 }
 
 func batch(){
-   add(1, 5)l |> batch() |> kid()
+   add(1, 5) |> batch() |> kid()
    blind()
    120
    lady = %{
@@ -20,7 +20,7 @@ func batch(){
    }
    %{}
    "boy" + "girl"
-   if( a and b != c){
+   if( a and b != c or c==d){
       l="boy"
    }elif(a){
 

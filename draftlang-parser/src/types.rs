@@ -1,13 +1,13 @@
 use std::collections::HashMap;
 
-use pest::iterators::Pair;
+use pest::{iterators::Pair, pratt_parser::Op};
 
 use crate::{json::JSONValue, Rule};
 
 #[derive(Debug, Clone)]
 pub struct DraftLangAst {
-    pub json: JSONValue,
-    pub script: HashMap<String, Vec<AstNode>>,
+    pub(crate) json: JSONValue,
+    pub(crate) script: HashMap<String, Vec<AstNode>>,
 }
 
 impl DraftLangAst {
@@ -21,9 +21,9 @@ impl DraftLangAst {
 
 #[derive(Debug, Clone)]
 pub struct FunctionCall {
-    pub name: String,
-    pub params: Vec<AstNode>,
-    pub pipe: Option<Box<FunctionCall>>,
+    pub(crate) name: String,
+    pub(crate) params: Vec<AstNode>,
+    pub(crate) pipe: Option<Box<FunctionCall>>,
 }
 
 ///All if and elif expression are to to stored in the if block
@@ -32,9 +32,20 @@ pub struct FunctionCall {
 /// While the else block is the fallback block
 #[derive(Debug, Clone)]
 pub struct IfExpr {
-    pub if_expr: Vec<(Vec<AstNode>, Vec<AstNode>)>,
-    pub executed: bool,
-    pub fallback: Vec<AstNode>,
+    pub(crate) if_expr: Vec<(Condition, Vec<AstNode>)>,
+    pub(crate) executed: bool,
+    pub(crate) fallback: Vec<AstNode>,
+}
+
+
+///Condition follow the patter (identifier, optional_verb, optional identifer)
+/// Followed by an `and` or `or` verb, then another condition which follows the 
+/// same structure. Thus the `next` field
+#[derive(Debug, Clone)]
+pub struct Condition {
+    pub(crate)  item: (AstNode, Option<Verb>, Option<AstNode>),
+    pub(crate) condition: Option<Verb>,
+    pub(crate) next: Option<Box<Condition>>,
 }
 
 ///These are the AST tokens for draftlang
@@ -90,8 +101,8 @@ pub fn parse_verb(pair: Pair<Rule>) -> Verb {
         "<" => Verb::LessThan,
         "==" => Verb::Equal,
         ">" => Verb::LargerThan,
-        "&&" => Verb::And,
-        "||" => Verb::Or,
+        "and" => Verb::And,
+        "or" => Verb::Or,
         "|>" => Verb::Pipe,
         "!=" => Verb::NotEqual,
         "<=" => Verb::LessThanOrEqual,
