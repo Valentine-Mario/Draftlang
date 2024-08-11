@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use pest::{iterators::Pair, pratt_parser::Op};
+use pest::iterators::Pair;
 
 use crate::{json::JSONValue, Rule};
 
