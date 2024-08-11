@@ -5,7 +5,8 @@ use pest::iterators::Pair;
 use crate::{util, Rule};
 
 //drftlang json interface only takes in a json key
-//and a json object
+//of string and value of string. Other types are
+//not supported on the json interface
 #[derive(Debug, Clone)]
 pub struct JSONValue {
     pub data: HashMap<String, String>,

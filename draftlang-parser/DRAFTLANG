@@ -12,7 +12,7 @@ load()
 }
 
 func batch(){
-   add(1, 5) |> batch() |> kid()
+   add(1, 5)l |> batch() |> kid()
    blind()
    120
    lady = %{

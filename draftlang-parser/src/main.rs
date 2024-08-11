@@ -13,7 +13,7 @@ fn main() {
             match e.line_col {
                 pest::error::LineColLocation::Pos((line, position)) => {
                     cprintln!(
-                        "<red>>>> Error on line {:?} position {:?}<red>",
+                        "<red>>>> Syntax Error on line {:?} position {:?}<red>",
                         line,
                         position
                     )

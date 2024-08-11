@@ -20,14 +20,34 @@ impl DraftLangAst {
 }
 
 #[derive(Debug, Clone)]
+pub struct FunctionCall {
+    pub name: String,
+    pub params: Vec<AstNode>,
+    pub pipe: Option<Box<FunctionCall>>,
+}
+
+///All if and elif expression are to to stored in the if block
+/// since elif is just a kind of if statement
+/// With the structure (condition, expression_block)
+/// While the else block is the fallback block
+#[derive(Debug, Clone)]
+pub struct IfExpr {
+    pub if_expr: Vec<(Vec<AstNode>, Vec<AstNode>)>,
+    pub executed: bool,
+    pub fallback: Vec<AstNode>,
+}
+
+///These are the AST tokens for draftlang
+#[derive(Debug, Clone)]
 pub enum AstNode {
     Ident(String),
     Str(String),
     Number(f64),
     Null,
-    Map(HashMap<String, AstNode>),
+    Map(HashMap<AstNode, AstNode>),
     Array(Vec<AstNode>),
     Boolean(bool),
+    Return(Box<AstNode>),
     Assignment {
         ident: Box<AstNode>,
         expr: Box<AstNode>,
@@ -36,6 +56,18 @@ pub enum AstNode {
         funcs: Vec<AstNode>,
         module: Box<AstNode>,
     },
+    ForLoop {
+        ident: (Box<AstNode>, Box<AstNode>),
+        range_value: Box<AstNode>,
+        expr: Vec<AstNode>,
+    },
+    Function {
+        name: String,
+        params: Vec<AstNode>,
+        expr: Vec<AstNode>,
+    },
+    FunctionCaller(FunctionCall),
+    IfExpresion(IfExpr),
 }
 
 #[derive(Clone, Debug)]
