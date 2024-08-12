@@ -16,7 +16,27 @@ pub fn parse_script(pair: Pair<Rule>) -> AstNode {
                 expr: Box::new(value),
             }
         }
-        Rule::import_stat => AstNode::Null,
+        Rule::import_stat => {
+            let inner_rule = pair.into_inner();
+            let mut imported_funcs: Vec<AstNode> = vec![];
+            let mut parent: AstNode = AstNode::Null;
+            let mut child: AstNode = AstNode::Null;
+            for item in inner_rule {
+                match item.as_rule() {
+                    Rule::ident => imported_funcs.push(parse_script(item)),
+                    Rule::module_call => {
+                        let mut module_rule = item.into_inner();
+                        parent = parse_script(module_rule.next().unwrap());
+                        child = parse_script(module_rule.next().unwrap());
+                    }
+                    _ => unreachable!(),
+                }
+            }
+            AstNode::Import {
+                funcs: imported_funcs,
+                module: Box::new(AstNode::ModuleImport(Box::new(parent), Box::new(child))),
+            }
+        }
         Rule::func_expression => {
             let mut inner_rule = pair.into_inner();
             let function_name = parse_script(inner_rule.next().unwrap());

@@ -1,5 +1,7 @@
 [draft]
 import mkdir, mkfile from core::file
+import get from core::http
+
 # this is a comment
 k="boy"
 low =23

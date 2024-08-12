@@ -62,6 +62,7 @@ pub enum AstNode {
         ident: Box<AstNode>,
         expr: Box<AstNode>,
     },
+    ModuleImport(Box<AstNode>, Box<AstNode>),
     Import {
         funcs: Vec<AstNode>,
         module: Box<AstNode>,
