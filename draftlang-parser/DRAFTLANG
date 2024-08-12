@@ -36,6 +36,12 @@ func batch(){
    return "boy"
 }
 
+func stuff(index, inc, dec){
+   y= "hello"
+   v=1200
+   print(index, inc)
+}
+
 [draft]
 
 {

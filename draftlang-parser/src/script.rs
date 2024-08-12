@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use pest::iterators::Pair;
 
 use crate::{types::AstNode, util, Rule};
@@ -15,10 +17,34 @@ pub fn parse_script(pair: Pair<Rule>) -> AstNode {
             }
         }
         Rule::import_stat => AstNode::Null,
-        Rule::func_expression => AstNode::Null,
+        Rule::func_expression => {
+            let mut inner_rule = pair.into_inner();
+            let function_name = parse_script(inner_rule.next().unwrap());
+            let function_param: Vec<AstNode> = inner_rule
+                .next()
+                .unwrap()
+                .into_inner()
+                .map(|x| parse_script(x))
+                .collect();
+            let mut function_body: Vec<AstNode> = vec![];
+
+            for item in inner_rule {
+                function_body.push(parse_script(item))
+            }
+            AstNode::Function {
+                name: Box::new(function_name),
+                params: function_param,
+                expr: function_body,
+            }
+        }
+
         Rule::types => {
             let mut inner_rules = pair.into_inner();
             parse_types(inner_rules.next().unwrap())
+        }
+        Rule::inline_expr => {
+            let mut inner_rules = pair.into_inner();
+            parse_script(inner_rules.next().unwrap())
         }
         _ => AstNode::Null,
     }
@@ -32,6 +58,10 @@ fn parse_types(pair: Pair<Rule>) -> AstNode {
         Rule::boolean => AstNode::Boolean(pair.as_str().parse().unwrap()),
         Rule::array => AstNode::Array(pair.into_inner().map(|x| parse_script(x)).collect()),
         Rule::null => AstNode::Null,
-        _ => unreachable!(),
+        Rule::map => AstNode::Map(HashMap::new()),
+        _ => {
+            println!("unreachable {:?}", pair);
+            AstNode::Null
+        }
     }
 }

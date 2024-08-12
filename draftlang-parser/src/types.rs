@@ -72,7 +72,7 @@ pub enum AstNode {
         expr: Vec<AstNode>,
     },
     Function {
-        name: String,
+        name: Box<AstNode>,
         params: Vec<AstNode>,
         expr: Vec<AstNode>,
     },
