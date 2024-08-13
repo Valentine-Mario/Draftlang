@@ -46,11 +46,13 @@ pub fn parse_script(pair: Pair<Rule>) -> AstNode {
                 .into_inner()
                 .map(|x| parse_script(x))
                 .collect();
-            let mut function_body: Vec<AstNode> = vec![];
+            let function_body: Vec<AstNode> = inner_rule
+            .next()
+            .unwrap()
+            .into_inner()
+            .map(|x| parse_script(x))
+            .collect();
 
-            for item in inner_rule {
-                function_body.push(parse_script(item))
-            }
             AstNode::Function {
                 name: Box::new(function_name),
                 params: function_param,
