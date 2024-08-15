@@ -21,7 +21,7 @@ impl DraftLangAst {
 
 #[derive(Debug, Clone)]
 pub struct FunctionCall {
-    pub(crate) name: String,
+    pub(crate) name: Box<AstNode>,
     pub(crate) params: Vec<AstNode>,
     pub(crate) pipe: Option<Box<FunctionCall>>,
 }

@@ -81,7 +81,8 @@ func_expression = {
         func_param ~ "{" ~ (inline_expr|types)* ~ "}"
                 }
 
-func_call = {ident ~ func_param ~ (verbs ~ ident ~ func_param)*}
+func_signature = {ident ~ func_param}
+func_call = {func_signature ~ ("|>" ~ func_signature)*}
 
 //for loop
 for_loop = {"for" ~ ident ~ "," ~ ident ~ "in" ~ (ident|types) ~ 
