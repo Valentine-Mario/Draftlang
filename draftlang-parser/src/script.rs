@@ -70,13 +70,9 @@ pub fn parse_script(pair: Pair<Rule>) -> AstNode {
             let mut inner_rules = pair.into_inner();
             parse_script(inner_rules.next().unwrap())
         }
-        Rule::map_item => {
-            let mut inner_rules = pair.into_inner();
-            let key = parse_script(inner_rules.next().unwrap());
-            let value = parse_script(inner_rules.next().unwrap());
-
-            println!("map item {:?} \n {:?}\n\n", key, value);
-            AstNode::Null
+        Rule::return_statement => {
+            let mut inner_rule = pair.into_inner();
+            AstNode::Return(Box::new(parse_script(inner_rule.next().unwrap())))
         }
         _ => AstNode::Null,
     }

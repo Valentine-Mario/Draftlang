@@ -21,6 +21,14 @@ load()
 }
 }
 
+func values(a, b, c){
+   return %{
+      "a":a,
+      "b":b,
+      "c":c
+   }
+}
+
 func batch(){
    add(1, 5) |> batch() |> kid()
    blind()
@@ -47,6 +55,7 @@ func stuff(index, inc, dec){
    y= "hello"
    v=1200
    print(index, inc)
+   return v
 }
 
 [draft]
