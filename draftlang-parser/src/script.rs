@@ -34,7 +34,10 @@ pub fn parse_script(pair: Pair<Rule>) -> AstNode {
             }
             AstNode::Import {
                 funcs: imported_funcs,
-                module: Box::new(AstNode::ModuleImport(Box::new(parent), Box::new(child))),
+                module: Box::new(AstNode::ModuleImport {
+                    parent: Box::new(parent),
+                    child: Box::new(child),
+                }),
             }
         }
         Rule::func_expression => {
@@ -46,12 +49,11 @@ pub fn parse_script(pair: Pair<Rule>) -> AstNode {
                 .into_inner()
                 .map(|x| parse_script(x))
                 .collect();
-            let function_body: Vec<AstNode> = inner_rule
-            .next()
-            .unwrap()
-            .into_inner()
-            .map(|x| parse_script(x))
-            .collect();
+            let mut function_body: Vec<AstNode> = vec![];
+
+            for item in inner_rule {
+                function_body.push(parse_script(item))
+            }
 
             AstNode::Function {
                 name: Box::new(function_name),
@@ -68,6 +70,14 @@ pub fn parse_script(pair: Pair<Rule>) -> AstNode {
             let mut inner_rules = pair.into_inner();
             parse_script(inner_rules.next().unwrap())
         }
+        Rule::map_item => {
+            let mut inner_rules = pair.into_inner();
+            let key = parse_script(inner_rules.next().unwrap());
+            let value = parse_script(inner_rules.next().unwrap());
+
+            println!("map item {:?} \n {:?}\n\n", key, value);
+            AstNode::Null
+        }
         _ => AstNode::Null,
     }
 }
@@ -80,10 +90,30 @@ fn parse_types(pair: Pair<Rule>) -> AstNode {
         Rule::boolean => AstNode::Boolean(pair.as_str().parse().unwrap()),
         Rule::array => AstNode::Array(pair.into_inner().map(|x| parse_script(x)).collect()),
         Rule::null => AstNode::Null,
-        Rule::map => AstNode::Map(HashMap::new()),
+        Rule::map => {
+            let mut map_vector: Vec<(AstNode, AstNode)> = vec![];
+            let inner_rule = pair.into_inner();
+
+            for item in inner_rule {
+                let (key, value) = parse_map_item(item);
+                map_vector.push((key, value))
+            }
+            AstNode::Map(map_vector)
+        }
         _ => {
             println!("unreachable {:?}", pair);
             AstNode::Null
         }
+    }
+}
+fn parse_map_item(pair: Pair<Rule>) -> (AstNode, AstNode) {
+    match pair.as_rule() {
+        Rule::map_item => {
+            let mut inner_rules = pair.into_inner();
+            let key = parse_script(inner_rules.next().unwrap());
+            let value = parse_script(inner_rules.next().unwrap());
+            (key, value)
+        }
+        _ => unreachable!(),
     }
 }

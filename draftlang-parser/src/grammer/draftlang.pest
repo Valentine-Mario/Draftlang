@@ -44,7 +44,7 @@ array= {
 }
 
 map_item= {
-    (string | single_quote_string) ~ ":" ~ (ident|types)
+    (ident|types) ~ ":" ~ (ident|types)
 }
 map = {
     "%{"~"}"|"%{" ~ map_item ~ 
@@ -64,15 +64,11 @@ types = {
   }
 
 //var expression
-assignment = {ident ~ "=" ~ (types|ident|str_concat|func_call)}
+assignment = {ident ~ "=" ~ (types|ident|func_call)}
 
 //inline expression
-inline_expr = {assignment | func_call | return_statement | for_loop | str_concat | if_statement}
+inline_expr = {assignment | func_call | return_statement | for_loop | if_statement}
 
-//string concat
-str_concat = { (string|single_quote_string) ~ 
-    "+" ~ (string|single_quote_string) ~ 
-    ("+" ~ (string|single_quote_string))*}
 
 //import expression
 import_stat= {"import" ~ ident ~ ("," ~ ident)* ~ "from" ~  module_call }

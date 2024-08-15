@@ -54,7 +54,7 @@ pub enum AstNode {
     Str(String),
     Number(f64),
     Null,
-    Map(HashMap<AstNode, AstNode>),
+    Map(Vec<(AstNode, AstNode)>),
     Array(Vec<AstNode>),
     Boolean(bool),
     Return(Box<AstNode>),
@@ -62,7 +62,10 @@ pub enum AstNode {
         ident: Box<AstNode>,
         expr: Box<AstNode>,
     },
-    ModuleImport(Box<AstNode>, Box<AstNode>),
+    ModuleImport {
+        parent: Box<AstNode>,
+        child: Box<AstNode>,
+    },
     Import {
         funcs: Vec<AstNode>,
         module: Box<AstNode>,
