@@ -91,7 +91,6 @@ pub fn parse_script(pair: Pair<Rule>) -> AstNode {
                 AstNode::FunctionCaller(call)
             }
         }
-        Rule::func_signature => AstNode::Null,
         Rule::for_loop => {
             let mut inner_rule = pair.into_inner();
             let index = parse_script(inner_rule.next().unwrap());
