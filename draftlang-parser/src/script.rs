@@ -17,6 +17,15 @@ pub fn parse_script(pair: Pair<Rule>) -> AstNode {
                 expr: Box::new(value),
             }
         }
+        Rule::assign_func => {
+            let mut inner_rules = pair.into_inner();
+            let ident = parse_script(inner_rules.next().unwrap());
+            let value = parse_script(inner_rules.next().unwrap());
+            AstNode::Assignment {
+                ident: Box::new(ident),
+                expr: Box::new(value),
+            }
+        }
         Rule::import_stat => {
             let inner_rule = pair.into_inner();
             let mut imported_funcs: Vec<AstNode> = vec![];

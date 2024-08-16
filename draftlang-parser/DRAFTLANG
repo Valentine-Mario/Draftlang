@@ -17,12 +17,15 @@ l=11
 k="guy"
 
 for i, j in value{
-   load()
+   
    bad = "bad"
    for p, val in item {
       print(val)
    }
    }
+  b:=factor()
+  c:= fast() |> pase(1, 2, 3)
+  return c
 }
 
 func values(a, b, c){
@@ -66,6 +69,7 @@ func stuff(index, inc, dec){
    fic(a, c)|>down()|>har()|>catt(e, me)
    help()
 }
+nie := stuff()
 
 [draft]
 
