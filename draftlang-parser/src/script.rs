@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
 use pest::iterators::Pair;
+use serde_json::value;
 
 use crate::{types::AstNode, util, Rule};
 
@@ -73,6 +74,23 @@ pub fn parse_script(pair: Pair<Rule>) -> AstNode {
         Rule::return_statement => {
             let mut inner_rule = pair.into_inner();
             AstNode::Return(Box::new(parse_script(inner_rule.next().unwrap())))
+        }
+        Rule::for_loop => {
+            let mut inner_rule = pair.into_inner();
+            let index = parse_script(inner_rule.next().unwrap());
+            let value = parse_script(inner_rule.next().unwrap());
+            let range_value = parse_script(inner_rule.next().unwrap());
+            let mut loop_body: Vec<AstNode> = vec![];
+
+            for item in inner_rule {
+                loop_body.push(parse_script(item))
+            }
+
+            AstNode::ForLoop {
+                ident: (Box::new(index), Box::new(value)),
+                range_value: Box::new(range_value),
+                expr: loop_body,
+            }
         }
         _ => AstNode::Null,
     }

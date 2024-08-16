@@ -17,11 +17,18 @@ l=11
 k="guy"
 
 for i, j in value{
-load()
-}
+   load()
+   bad = "bad"
+   for p, val in item {
+      print(val)
+   }
+   }
 }
 
 func values(a, b, c){
+   for v, l in open {
+      return v
+   }
    return %{
       "a":a,
       "b":b,
