@@ -1,9 +1,9 @@
-use std::collections::HashMap;
+use pest::iterators::{Pair, Pairs};
 
-use pest::iterators::Pair;
-use serde_json::value;
-
-use crate::{types::AstNode, util, Rule};
+use crate::{
+    types::{AstNode, FunctionCall},
+    util, Rule,
+};
 
 pub fn parse_script(pair: Pair<Rule>) -> AstNode {
     match pair.as_rule() {
@@ -75,6 +75,23 @@ pub fn parse_script(pair: Pair<Rule>) -> AstNode {
             let mut inner_rule = pair.into_inner();
             AstNode::Return(Box::new(parse_script(inner_rule.next().unwrap())))
         }
+        Rule::func_call => {
+            //get function name and parameters
+            let mut inner_rule = pair.into_inner();
+            let (name, param) = parse_func_signature(inner_rule.next().unwrap());
+
+            //if the function has pipe children recursvely add them to the pipe
+            if inner_rule.clone().next().is_some() {
+                let pipe = construct_pipe(inner_rule);
+
+                let call = FunctionCall::new(name, param, pipe);
+                AstNode::FunctionCaller(call)
+            } else {
+                let call = FunctionCall::new(name, param, None);
+                AstNode::FunctionCaller(call)
+            }
+        }
+        Rule::func_signature => AstNode::Null,
         Rule::for_loop => {
             let mut inner_rule = pair.into_inner();
             let index = parse_script(inner_rule.next().unwrap());
@@ -127,6 +144,42 @@ fn parse_map_item(pair: Pair<Rule>) -> (AstNode, AstNode) {
             let key = parse_script(inner_rules.next().unwrap());
             let value = parse_script(inner_rules.next().unwrap());
             (key, value)
+        }
+        _ => unreachable!(),
+    }
+}
+
+fn construct_pipe(mut pair: Pairs<Rule>) -> Option<Box<FunctionCall>> {
+    //pass the rule and children to function
+    let inner_rule = pair.next();
+    //if there are more children, construct a nexted strut
+    // else terminate the function
+    if inner_rule.is_some() {
+        let (pipename, pipeparam) = parse_func_signature(inner_rule.unwrap());
+
+        let pipe = Some(Box::new(FunctionCall::new(
+            pipename,
+            pipeparam,
+            construct_pipe(pair),
+        )));
+        pipe
+    } else {
+        None
+    }
+}
+
+fn parse_func_signature(pair: Pair<Rule>) -> (AstNode, Vec<AstNode>) {
+    match pair.as_rule() {
+        Rule::func_signature => {
+            let mut inner_rule = pair.into_inner();
+            let function_name = parse_script(inner_rule.next().unwrap());
+            let function_param: Vec<AstNode> = inner_rule
+                .next()
+                .unwrap()
+                .into_inner()
+                .map(|x| parse_script(x))
+                .collect();
+            (function_name, function_param)
         }
         _ => unreachable!(),
     }

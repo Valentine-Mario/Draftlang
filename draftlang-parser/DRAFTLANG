@@ -63,6 +63,8 @@ func stuff(index, inc, dec){
    v=1200
    print(index, inc)
    return v
+   fic(a, c)|>down()|>har()|>catt(e, me)
+   help()
 }
 
 [draft]

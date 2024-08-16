@@ -26,6 +26,17 @@ pub struct FunctionCall {
     pub(crate) pipe: Option<Box<FunctionCall>>,
 }
 
+impl FunctionCall {
+    pub fn new(name: AstNode, params: Vec<AstNode>, pipe: Option<Box<FunctionCall>>) -> Self {
+        FunctionCall {
+            name: Box::new(name),
+            params,
+            pipe,
+        }
+    }
+
+    pub fn from_pipe() {}
+}
 ///All if and elif expression are to to stored in the if block
 /// since elif is just a kind of if statement
 /// With the structure (condition, expression_block)
