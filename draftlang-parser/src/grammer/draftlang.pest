@@ -12,9 +12,10 @@ reserver_words= {
     )
 }
 
-var_name= @{(ASCII_ALPHA ~ (ASCII_ALPHANUMERIC | "_" | "?")*)}
+var_name= @{((ASCII_ALPHA|"_") ~ (ASCII_ALPHANUMERIC | "_")*)}
 
 ident = @{ !(reserver_words ~ !ASCII_ALPHANUMERIC) ~ var_name}
+ident2= @{ !(reserver_words ~ !ASCII_ALPHANUMERIC) ~ var_name}
 number = @{
     "-"?
     ~ ("0"| ASCII_NONZERO_DIGIT ~ ASCII_DIGIT*)
@@ -50,6 +51,7 @@ map = {
     "%{"~"}"|"%{" ~ map_item ~ 
     ("," ~ map_item)* ~ ","? ~ "}"
 }
+
 module_call = {ident ~ "::" ~ ident}
 
 //valid draflang types
@@ -65,11 +67,11 @@ types = {
 
 //var expression
 assignment = {ident ~ "=" ~ (types|ident)}
-assign_func = {ident ~ ":=" ~ func_call}
+assign_func = {ident ~ "=" ~ func_call}
 
 
 //inline expression
-inline_expr = {assignment | assign_func | func_call | return_statement | for_loop | if_statement}
+inline_expr = {assign_func | func_call | return_statement | for_loop | if_statement}
 
 
 //import expression
@@ -77,10 +79,15 @@ import_stat= {"import" ~ ident ~ ("," ~ ident)* ~ "from" ~  module_call }
 
 //function expression
 return_statement = {"return" ~ (ident | types)}
+
+//code block
+block = { inline_expr|types|assignment}
+
+//function
 func_param = {"(" ~ ")" | "(" ~ (ident|types) ~ ("," ~ (ident|types))* ~ ")"}
 func_expression = {
         "func" ~ ident ~ 
-        func_param ~ "{" ~ (inline_expr|types)* ~ "}"
+        func_param ~ "{" ~ (block)* ~ "}"
                 }
 
 func_signature = {ident ~ func_param}
@@ -88,7 +95,7 @@ func_call = {func_signature ~ ("|>" ~ func_signature)*}
 
 //for loop
 for_loop = {"for" ~ ident ~ "," ~ ident ~ "in" ~ (ident|types) ~ 
-        "{" ~ (inline_expr|types)* ~ 
+        "{" ~ (block)* ~ 
             "}" }
 
 
@@ -98,9 +105,9 @@ cond_type = {"and" | "or"}
 cond_expr = { ident | func_call | types}
 cond = { (cond_expr ~ verbs ~ cond_expr) | cond_expr}
 cond_statement = {"(" ~ cond ~ (cond_type ~ cond)* ~ ")"}
-if_statement = {"if" ~ cond_statement ~ "{" ~ (inline_expr|types)* ~ "}" ~ else_if_statement* ~ else_statement?}
-else_if_statement = {"elif" ~ cond_statement ~ "{" ~ (inline_expr|types)* ~ "}"}
-else_statement = {"else" ~ "{" ~ (inline_expr|types)* ~ "}"}
+if_statement = {"if" ~ cond_statement ~ "{" ~ (block)* ~ "}" ~ else_if_statement* ~ else_statement?}
+else_if_statement = {"elif" ~ cond_statement ~ "{" ~ (block)* ~ "}"}
+else_statement = {"else" ~ "{" ~ (block)* ~ "}"}
 
 
 //expressions

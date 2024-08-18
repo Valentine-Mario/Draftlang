@@ -76,6 +76,10 @@ pub fn parse_script(pair: Pair<Rule>) -> AstNode {
             let mut inner_rules = pair.into_inner();
             parse_types(inner_rules.next().unwrap())
         }
+        Rule::block => {
+            let mut inner_rules = pair.into_inner();
+            parse_script(inner_rules.next().unwrap())
+        }
         Rule::inline_expr => {
             let mut inner_rules = pair.into_inner();
             parse_script(inner_rules.next().unwrap())

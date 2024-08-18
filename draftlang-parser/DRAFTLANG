@@ -23,8 +23,8 @@ for i, j in value{
       print(val)
    }
    }
-  b:=factor()
-  c:= fast() |> pase(1, 2, 3)
+  b=factor()
+  c= fast() |> pase(1, 2, 3)
   return c
 }
 
@@ -43,6 +43,7 @@ func batch(){
    add(1, 5) |> batch() |> kid()
    blind()
    120
+   read= all_values
    lady = %{
       "hello":1
    }
@@ -66,10 +67,11 @@ func stuff(index, inc, dec){
    v=1200
    print(index, inc)
    return v
-   fic(a, c)|>down()|>har()|>catt(e, me)
+   fic = fic(a, c)|>down()|>har()|>catt(e, me)
    help()
+   num=  add(1, 2)
 }
-nie := stuff()
+#nie = stuff()
 
 [draft]
 
