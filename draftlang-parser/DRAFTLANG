@@ -12,6 +12,7 @@ config= %{
       true: "girl"
    }
 }
+
 func add(a, b){
 l=11
 k="guy"
@@ -71,7 +72,6 @@ func stuff(index, inc, dec){
    help()
    num=  add(1, 2)
 }
-#nie = stuff()
 
 [draft]
 

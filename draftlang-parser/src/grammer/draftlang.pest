@@ -68,6 +68,7 @@ types = {
 //var expression
 assignment = {ident ~ "=" ~ (types|ident)}
 assign_func = {ident ~ "=" ~ func_call}
+global_assignment = {ident ~ "=" ~ types}
 
 
 //inline expression
@@ -111,7 +112,7 @@ else_statement = {"else" ~ "{" ~ (block)* ~ "}"}
 
 
 //expressions
-expr = {assignment|import_stat|func_expression|assign_func}
+expr = {global_assignment|import_stat|func_expression}
 json_object = { 
     "{" ~ "}" | "{" ~ json_pair ~ ("," ~ json_pair)* ~ "}"
 }
