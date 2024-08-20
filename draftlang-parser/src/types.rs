@@ -54,8 +54,8 @@ pub struct IfExpr {
 
 #[derive(Debug, Clone)]
 pub enum IfCondition {
-    Cond((AstNode, Option<Verb>, Option<AstNode>)),
-    Join(Verb),
+    Expr((AstNode, Option<Verb>, Option<AstNode>)),
+    Cond(Verb),
 }
 
 ///These are the AST tokens for draftlang

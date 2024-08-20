@@ -275,10 +275,10 @@ fn parse_condition(pair: Pair<Rule>) -> Vec<IfCondition> {
                     cond_tuplue.1 = Some(parse_verb(item))
                 }
             }
-            return_value.push(IfCondition::Cond(cond_tuplue))
+            return_value.push(IfCondition::Expr(cond_tuplue))
         } else {
             let join = parse_verb(item);
-            return_value.push(IfCondition::Join(join))
+            return_value.push(IfCondition::Cond(join))
         }
     }
 
