@@ -51,11 +51,14 @@ func batch(){
    %{}
    if( a and b != c or c==d){
       l="boy"
-   }elif(a){
-
+      s= loader()
+   }elif(a or b){
+      y= "hello"
+      v=1200
    }elif(false){
 
    }else{
+      b=call()
       if (c){
          
       }
@@ -70,6 +73,9 @@ func stuff(index, inc, dec){
    return v
    fic = fic(a, c)|>down()|>har()|>catt(e, me)
    help()
+   if(item == 2){
+      print(item)
+   }
    num=  add(1, 2)
 }
 

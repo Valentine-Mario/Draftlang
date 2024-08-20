@@ -1,7 +1,9 @@
+use std::vec;
+
 use pest::iterators::{Pair, Pairs};
 
 use crate::{
-    types::{AstNode, FunctionCall},
+    types::{parse_verb, AstNode, FunctionCall, IfCondition, IfExpr, Verb},
     util, Rule,
 };
 
@@ -88,6 +90,10 @@ pub fn parse_script(pair: Pair<Rule>) -> AstNode {
             let mut inner_rule = pair.into_inner();
             AstNode::Return(Box::new(parse_script(inner_rule.next().unwrap())))
         }
+        Rule::cond_expr => {
+            let mut inner_rules = pair.into_inner();
+            parse_script(inner_rules.next().unwrap())
+        }
         Rule::func_call => {
             //get function name and parameters
             let mut inner_rule = pair.into_inner();
@@ -120,6 +126,50 @@ pub fn parse_script(pair: Pair<Rule>) -> AstNode {
                 range_value: Box::new(range_value),
                 expr: loop_body,
             }
+        }
+        Rule::if_statement => {
+            let mut inner_rule = pair.clone().into_inner();
+
+            let cond_pair = inner_rule.next().unwrap();
+            let condition = parse_condition(cond_pair);
+            let mut if_block: Vec<AstNode> = vec![];
+            let mut else_block: Vec<AstNode> = vec![];
+            let mut if_expression: Vec<(Vec<IfCondition>, Vec<AstNode>)> = vec![];
+            for item in inner_rule {
+                if item.as_rule() == Rule::block {
+                    if_block.push(parse_script(item.clone()))
+                }
+            }
+            if_expression.push((condition, if_block));
+
+            for item in pair.into_inner() {
+                if item.as_rule() == Rule::else_if_statement {
+                    let mut inner_elif_rule = item.clone().into_inner();
+                    let elif_cond_pair = inner_elif_rule.next().unwrap();
+                    let condition = parse_condition(elif_cond_pair);
+                    let mut elif_block: Vec<AstNode> = vec![];
+                    for block in inner_elif_rule {
+                        if block.as_rule() == Rule::block {
+                            elif_block.push(parse_script(block.clone()))
+                        }
+                    }
+                    if_expression.push((condition, elif_block));
+                }
+
+                if item.as_rule() == Rule::else_statement {
+                    for item in item.into_inner() {
+                        else_block.push(parse_script(item))
+                    }
+                }
+            }
+
+            let ifexpr = IfExpr {
+                if_expr: if_expression,
+                executed: false,
+                fallback: else_block,
+            };
+
+            AstNode::IfExpresion(ifexpr)
         }
         _ => AstNode::Null,
     }
@@ -195,4 +245,35 @@ fn parse_func_signature(pair: Pair<Rule>) -> (AstNode, Vec<AstNode>) {
         }
         _ => unreachable!(),
     }
+}
+
+fn parse_condition(pair: Pair<Rule>) -> Vec<IfCondition> {
+    let inner_rule = pair.into_inner();
+    let mut return_value: Vec<IfCondition> = vec![];
+
+    for item in inner_rule {
+        if item.as_rule() == Rule::cond {
+            let condition = item.into_inner();
+            let mut cond_tuplue: (AstNode, Option<Verb>, Option<AstNode>) =
+                (AstNode::Null, None, None);
+
+            for item in condition {
+                if item.as_rule() == Rule::cond_expr {
+                    if cond_tuplue.1.is_some() {
+                        cond_tuplue.2 = Some(parse_script(item))
+                    } else {
+                        cond_tuplue.0 = parse_script(item)
+                    }
+                } else {
+                    cond_tuplue.1 = Some(parse_verb(item))
+                }
+            }
+            return_value.push(IfCondition::Cond(cond_tuplue))
+        } else {
+            let join = parse_verb(item);
+            return_value.push(IfCondition::Join(join))
+        }
+    }
+
+    return_value
 }

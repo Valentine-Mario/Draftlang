@@ -46,13 +46,17 @@ pub struct IfExpr {
     //the structure of an if expression is as follows:
     //vec[(vec[condition], code_block)]
     //where condition follows the structure ((node ~ optional_verb ~ optional_node), optional_and_or)
-    //the optional_and_or at the end links to the next item in the vector 
-    pub(crate) if_expr: Vec<(Vec<((AstNode, Option<Verb>, Option<AstNode>), Option<Verb>)>, Vec<AstNode>)>,
+    //the optional_and_or at the end links to the next item in the vector
+    pub(crate) if_expr: Vec<(Vec<IfCondition>, Vec<AstNode>)>,
     pub(crate) executed: bool,
     pub(crate) fallback: Vec<AstNode>,
 }
 
-
+#[derive(Debug, Clone)]
+pub enum IfCondition {
+    Cond((AstNode, Option<Verb>, Option<AstNode>)),
+    Join(Verb),
+}
 
 ///These are the AST tokens for draftlang
 #[derive(Debug, Clone)]
