@@ -18,8 +18,8 @@ pub fn parse_script(pair: Pair<Rule>) -> AstNode {
                 ident: Box::new(ident),
                 expr: Box::new(value),
             }
-        },
-        Rule::global_assignment=>{
+        }
+        Rule::global_assignment => {
             let mut inner_rules = pair.into_inner();
             let ident = parse_script(inner_rules.next().unwrap());
             let value = parse_script(inner_rules.next().unwrap());
