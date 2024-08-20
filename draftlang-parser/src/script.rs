@@ -128,32 +128,19 @@ pub fn parse_script(pair: Pair<Rule>) -> AstNode {
             }
         }
         Rule::if_statement => {
-            let mut inner_rule = pair.clone().into_inner();
+            let inner_rule = pair.clone().into_inner();
 
-            let cond_pair = inner_rule.next().unwrap();
-            let condition = parse_condition(cond_pair);
-            let mut if_block: Vec<AstNode> = vec![];
             let mut else_block: Vec<AstNode> = vec![];
             let mut if_expression: Vec<(Vec<IfCondition>, Vec<AstNode>)> = vec![];
-            for item in inner_rule {
-                if item.as_rule() == Rule::block {
-                    if_block.push(parse_script(item.clone()))
-                }
-            }
+            let (condition, if_block) = parse_if_block(inner_rule);
             if_expression.push((condition, if_block));
 
             for item in pair.into_inner() {
                 if item.as_rule() == Rule::else_if_statement {
-                    let mut inner_elif_rule = item.clone().into_inner();
-                    let elif_cond_pair = inner_elif_rule.next().unwrap();
-                    let condition = parse_condition(elif_cond_pair);
-                    let mut elif_block: Vec<AstNode> = vec![];
-                    for block in inner_elif_rule {
-                        if block.as_rule() == Rule::block {
-                            elif_block.push(parse_script(block.clone()))
-                        }
-                    }
-                    if_expression.push((condition, elif_block));
+                    let inner_elif_rule = item.clone().into_inner();
+
+                    let (condition, if_block) = parse_if_block(inner_elif_rule);
+                    if_expression.push((condition, if_block));
                 }
 
                 if item.as_rule() == Rule::else_statement {
@@ -247,6 +234,17 @@ fn parse_func_signature(pair: Pair<Rule>) -> (AstNode, Vec<AstNode>) {
     }
 }
 
+fn parse_if_block(mut inner_rule: Pairs<Rule>) -> (Vec<IfCondition>, Vec<AstNode>) {
+    let cond_pair = inner_rule.next().unwrap();
+    let condition = parse_condition(cond_pair);
+    let mut if_block: Vec<AstNode> = vec![];
+    for item in inner_rule {
+        if item.as_rule() == Rule::block {
+            if_block.push(parse_script(item.clone()))
+        }
+    }
+    (condition, if_block)
+}
 fn parse_condition(pair: Pair<Rule>) -> Vec<IfCondition> {
     let inner_rule = pair.into_inner();
     let mut return_value: Vec<IfCondition> = vec![];

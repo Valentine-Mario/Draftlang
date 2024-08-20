@@ -22,8 +22,4 @@ fn main() {
     //         cprintln!("<red>>>> {:?}<red>", e.line())
     //     }
     // }
-
-   
 }
-
-
