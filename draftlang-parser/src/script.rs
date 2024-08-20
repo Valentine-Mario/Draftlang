@@ -1,4 +1,4 @@
-use std::vec;
+use std::{collections::HashMap, vec};
 
 use pest::iterators::{Pair, Pairs};
 
@@ -11,6 +11,15 @@ pub fn parse_script(pair: Pair<Rule>) -> AstNode {
     match pair.as_rule() {
         Rule::ident => AstNode::Ident(pair.as_str().to_string()),
         Rule::assignment => {
+            let mut inner_rules = pair.into_inner();
+            let ident = parse_script(inner_rules.next().unwrap());
+            let value = parse_script(inner_rules.next().unwrap());
+            AstNode::Assignment {
+                ident: Box::new(ident),
+                expr: Box::new(value),
+            }
+        },
+        Rule::global_assignment=>{
             let mut inner_rules = pair.into_inner();
             let ident = parse_script(inner_rules.next().unwrap());
             let value = parse_script(inner_rules.next().unwrap());
@@ -171,14 +180,14 @@ fn parse_types(pair: Pair<Rule>) -> AstNode {
         Rule::array => AstNode::Array(pair.into_inner().map(|x| parse_script(x)).collect()),
         Rule::null => AstNode::Null,
         Rule::map => {
-            let mut map_vector: Vec<(AstNode, AstNode)> = vec![];
+            let mut map_item: HashMap<String, AstNode> = HashMap::new();
             let inner_rule = pair.into_inner();
 
             for item in inner_rule {
                 let (key, value) = parse_map_item(item);
-                map_vector.push((key, value))
+                map_item.insert(key, value);
             }
-            AstNode::Map(map_vector)
+            AstNode::Map(map_item)
         }
         _ => {
             println!("unreachable {:?}", pair);
@@ -186,11 +195,11 @@ fn parse_types(pair: Pair<Rule>) -> AstNode {
         }
     }
 }
-fn parse_map_item(pair: Pair<Rule>) -> (AstNode, AstNode) {
+fn parse_map_item(pair: Pair<Rule>) -> (String, AstNode) {
     match pair.as_rule() {
         Rule::map_item => {
             let mut inner_rules = pair.into_inner();
-            let key = parse_script(inner_rules.next().unwrap());
+            let key = util::unescape_string(inner_rules.next().unwrap().as_str());
             let value = parse_script(inner_rules.next().unwrap());
             (key, value)
         }

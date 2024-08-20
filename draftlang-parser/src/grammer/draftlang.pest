@@ -45,7 +45,7 @@ array= {
 }
 
 map_item= {
-    (ident|types) ~ ":" ~ (ident|types)
+    (string|single_quote_string) ~ ":" ~ (ident|types)
 }
 map = {
     "%{"~"}"|"%{" ~ map_item ~ 

@@ -6,12 +6,7 @@ import get from core::http
 k="boy"
 low =23
 boys = ["value", 34, [false, nil]]
-config= %{
-   1:"boys",
-   2: %{
-      true: "girl"
-   }
-}
+
 
 func add(a, b){
 l=11
@@ -77,6 +72,13 @@ func stuff(index, inc, dec){
       print(item)
    }
    num=  add(1, 2)
+}
+
+config= %{
+   "1":"boys",
+   "2": %{
+      "true": "girl"
+   }
 }
 
 [draft]

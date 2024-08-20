@@ -65,7 +65,7 @@ pub enum AstNode {
     Str(String),
     Number(f64),
     Null,
-    Map(Vec<(AstNode, AstNode)>),
+    Map(HashMap<String, AstNode>),
     Array(Vec<AstNode>),
     Boolean(bool),
     Return(Box<AstNode>),
