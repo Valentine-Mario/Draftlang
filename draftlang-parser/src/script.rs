@@ -215,12 +215,11 @@ fn construct_pipe(mut pair: Pairs<Rule>) -> Option<Box<FunctionCall>> {
     if inner_rule.is_some() {
         let (pipename, pipeparam) = parse_func_signature(inner_rule.unwrap());
 
-        let pipe = Some(Box::new(FunctionCall::new(
+        Some(Box::new(FunctionCall::new(
             pipename,
             pipeparam,
             construct_pipe(pair),
-        )));
-        pipe
+        )))
     } else {
         None
     }

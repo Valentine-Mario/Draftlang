@@ -1,6 +1,7 @@
 [draft]
 import mkdir, mkfile from core::file
 import get from core::http
+import fetch from core::http
 
 # this is a comment
 k="boy"

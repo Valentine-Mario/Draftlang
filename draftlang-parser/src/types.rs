@@ -6,8 +6,8 @@ use crate::{json::JSONValue, Rule};
 
 #[derive(Debug, Clone)]
 pub struct DraftLangAst {
-    pub(crate) json: JSONValue,
-    pub(crate) script: HashMap<String, Vec<AstNode>>,
+    pub json: JSONValue,
+    pub script: HashMap<String, Vec<AstNode>>,
 }
 
 impl DraftLangAst {
@@ -21,9 +21,9 @@ impl DraftLangAst {
 
 #[derive(Debug, Clone)]
 pub struct FunctionCall {
-    pub(crate) name: Box<AstNode>,
-    pub(crate) params: Vec<AstNode>,
-    pub(crate) pipe: Option<Box<FunctionCall>>,
+    pub name: Box<AstNode>,
+    pub params: Vec<AstNode>,
+    pub pipe: Option<Box<FunctionCall>>,
 }
 
 impl FunctionCall {
@@ -43,15 +43,15 @@ impl FunctionCall {
 /// While the else block is the fallback block
 #[derive(Debug, Clone)]
 pub struct IfExpr {
-    //the structure of an if expression is as follows:
-    //vec[(vec[condition], code_block)]
-    //where condition follows the structure ((node ~ optional_verb ~ optional_node), optional_and_or)
-    //the optional_and_or at the end links to the next item in the vector
-    pub(crate) if_expr: Vec<(Vec<IfCondition>, Vec<AstNode>)>,
-    pub(crate) executed: bool,
-    pub(crate) fallback: Vec<AstNode>,
+    pub if_expr: Vec<(Vec<IfCondition>, Vec<AstNode>)>,
+    pub executed: bool,
+    pub fallback: Vec<AstNode>,
 }
 
+//here the expr follows (astnode optional<vern> optional<astnode>)
+//take for example if(a != b) the following enum would be (ident(a) some(verb::not_equal), some(ident(b)) )
+//but in situations where say if(a) => (ident(a) None, None)
+//in between 2 expressions we have the and|or verb
 #[derive(Debug, Clone)]
 pub enum IfCondition {
     Expr((AstNode, Option<Verb>, Option<AstNode>)),

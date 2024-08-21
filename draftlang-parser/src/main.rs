@@ -1,25 +1,7 @@
-use color_print::cprintln;
-use draftlang_parser::parse_file;
+use draftlang_parser::parse;
 
 fn main() {
     let unparsed_file = std::fs::read_to_string("DRAFTLANG").expect("cannot read elixir file");
-    let v = parse_file(&unparsed_file);
-    // match v {
-    //     Ok(v) => {
-    //         println!("parsed values {:#?}", v)
-    //     }
-    //     Err(e) => {
-    //         match e.line_col {
-    //             pest::error::LineColLocation::Pos((line, position)) => {
-    //                 cprintln!(
-    //                     "<red>>>> Syntax Error on line {:?} position {:?}<red>",
-    //                     line,
-    //                     position
-    //                 )
-    //             }
-    //             _ => todo!(),
-    //         }
-    //         cprintln!("<red>>>> {:?}<red>", e.line())
-    //     }
-    // }
+    let v = parse(&unparsed_file);
+    println!("{:?}", v);
 }

@@ -10,3 +10,4 @@ pest = "2.6"
 pest_derive = "2.6"
 serde_json =  {workspace = true}
 color-print =  {workspace = true}
+draftlang_error = {path="../error", version="0.1.0"}

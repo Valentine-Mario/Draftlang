@@ -9,7 +9,7 @@ use crate::{util, Rule};
 //not supported on the json interface
 #[derive(Debug, Clone)]
 pub struct JSONValue {
-    pub(crate) data: HashMap<String, String>,
+    pub data: HashMap<String, String>,
 }
 
 pub fn parse_json(pair: Pair<Rule>, json_map: &mut HashMap<String, String>) {
