@@ -86,6 +86,6 @@ config= %{
 
 {
    "hello":stuff(),
-   "get":well(1, true) && later(),
+   "get":well(1, true) && later() && add(1, 2, 3),
    "my": goat(%{"key": 1})
 }
