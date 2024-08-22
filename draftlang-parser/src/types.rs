@@ -11,7 +11,10 @@ pub struct DraftLangAst {
 }
 
 impl DraftLangAst {
-    pub fn new(data: HashMap<String, String>, script: HashMap<String, Vec<AstNode>>) -> Self {
+    pub fn new(
+        data: HashMap<String, Vec<(AstNode, Vec<AstNode>)>>,
+        script: HashMap<String, Vec<AstNode>>,
+    ) -> Self {
         DraftLangAst {
             json: JSONValue { data },
             script,

@@ -85,7 +85,7 @@ config= %{
 [draft]
 
 {
-   "hello":"world",
-   "get":"well() || later()",
-   "my": "goat"
+   "hello":stuff(),
+   "get":well(1, true) && later(),
+   "my": goat(%{"key": 1})
 }

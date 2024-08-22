@@ -116,7 +116,9 @@ expr = {global_assignment|import_stat|func_expression}
 json_object = { 
     "{" ~ "}" | "{" ~ json_pair ~ ("," ~ json_pair)* ~ "}"
 }
-json_pair= {string ~ ":" ~ string}
+
+json_function= {func_signature ~ ("&&" ~ func_signature)*}
+json_pair= {string ~ ":" ~ json_function}
 
 
 draft_lang = {json_object? ~ "[draft]" ~ expr* ~ "[draft]" ~ json_object? }

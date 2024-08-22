@@ -62,7 +62,7 @@ pub fn parse(source: &str) -> Result<DraftLangAst, DError> {
 fn parse_draftlang_script(
     pair: Pair<Rule>,
     ast_script: &mut Vec<AstNode>,
-    json_map: &mut HashMap<String, String>,
+    json_map: &mut HashMap<String, Vec<(AstNode, Vec<AstNode>)>>,
 ) {
     match pair.as_rule() {
         Rule::expr => {

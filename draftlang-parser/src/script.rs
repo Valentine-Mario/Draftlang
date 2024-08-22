@@ -225,7 +225,7 @@ fn construct_pipe(mut pair: Pairs<Rule>) -> Option<Box<FunctionCall>> {
     }
 }
 
-fn parse_func_signature(pair: Pair<Rule>) -> (AstNode, Vec<AstNode>) {
+pub fn parse_func_signature(pair: Pair<Rule>) -> (AstNode, Vec<AstNode>) {
     match pair.as_rule() {
         Rule::func_signature => {
             let mut inner_rule = pair.into_inner();
