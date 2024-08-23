@@ -4,6 +4,7 @@ pub enum Error {
     ASDFNotFound(&'static str),
     ASDFCmdError(&'static str),
     ParsingError(&'static str),
+    ErrorReadingFile(&'static str),
     NullError,
 }
 
@@ -17,7 +18,8 @@ impl fmt::Debug for Error {
                 ele)
             }
             Error::ASDFCmdError(ele) => write!(f, "Error running ASDF command {}", ele),
-            Error::ParsingError(ele)=>write!(f, "{}", ele),
+            Error::ParsingError(ele) => write!(f, "{}", ele),
+            Error::ErrorReadingFile(ele) => write!(f, "Error reading file {}", ele),
             _ => write!(f, "{:?}", self::Error::NullError), // For any variant not previously covered
         }
     }

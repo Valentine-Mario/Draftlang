@@ -1,6 +1,6 @@
 mod json;
 mod script;
-mod types;
+pub mod types;
 mod util;
 
 use std::collections::HashMap;

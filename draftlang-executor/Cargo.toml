@@ -6,3 +6,6 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+draftlang_error = {path="../error", version="0.1.0"}
+draftlang-parser = {path="../draftlang-parser", version="0.1.0"}
+asdf-util = {path="../asdf-util", version="0.1.0"}

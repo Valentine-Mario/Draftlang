@@ -89,6 +89,11 @@ version = "0.1.0"
 [[package]]
 name = "draftlang-executor"
 version = "0.1.0"
+dependencies = [
+ "asdf-util",
+ "draftlang-parser",
+ "draftlang_error",
+]
 
 [[package]]
 name = "draftlang-parser"
