@@ -5,7 +5,6 @@ mod util;
 
 use std::collections::HashMap;
 
-use color_print::cprintln;
 use draftlang_error::Error as DError;
 use pest::iterators::Pair;
 use pest::{error::Error, Parser};
@@ -48,12 +47,10 @@ pub fn parse(source: &str) -> Result<DraftLangAst, DError> {
                     let error_pos =
                         format!("Syntax Error on line {:?} position {:?}\n", line, position);
                     s.push_str(error_pos.as_str());
-                    cprintln!("<red> {:#?} <red>", error_pos);
                 }
                 _ => todo!(),
             }
             s.push_str(e.line());
-            cprintln!("<red> {:#?} <red>", e.line());
             Err(DError::ParsingError(Box::leak(s.into_boxed_str())))
         }
     }

@@ -91,6 +91,7 @@ name = "draftlang-executor"
 version = "0.1.0"
 dependencies = [
  "asdf-util",
+ "color-print",
  "draftlang-parser",
  "draftlang_error",
 ]
@@ -99,7 +100,6 @@ dependencies = [
 name = "draftlang-parser"
 version = "0.1.0"
 dependencies = [
- "color-print",
  "draftlang_error",
  "pest",
  "pest_derive",
