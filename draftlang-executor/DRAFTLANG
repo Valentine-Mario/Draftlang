@@ -7,3 +7,6 @@ func create_env(){
 }
 [draft]
 
+{
+    "setup": create_env()
+}

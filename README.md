@@ -11,7 +11,8 @@ func createFile(){
 }
 
 func renameFile(){
-    rmFile("app.txt", "new_name.txt")
+    name = "app.txt"
+    rmFile(name, "new_name.txt")
 }
 
 [draft]
@@ -19,9 +20,9 @@ func renameFile(){
 
 
 {
-    "makeFile":"createFile()",
-    "renameFile":"renameFile()",
-    "parallelRun":"createFile() || renameFile()"
+    "makeFile":createFile(),
+    "renameFile":renameFile(),
+    "parallelRun":createFile() && renameFile()
 }
 
 
