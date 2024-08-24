@@ -1,5 +1,5 @@
 [draft]
-import mkfile, mkdir, from core::fs
+import mkfile, mkdir from core::fs
 
 func create_env(){
     name= ".env"
