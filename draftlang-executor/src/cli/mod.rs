@@ -8,8 +8,8 @@ pub struct Args {
     #[structopt(long = "file-path", default_value = "DRAFTLANG", parse(from_os_str))]
     pub file_path: PathBuf,
 
-    #[structopt(long = "funcs")]
-    pub funcs: String,
+    #[structopt(long = "func")]
+    pub func: String,
 }
 
 impl Args {
