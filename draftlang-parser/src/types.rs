@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, fmt};
 
 use pest::iterators::Pair;
 
@@ -68,10 +68,12 @@ pub enum AstNode {
     Str(String),
     Number(f64),
     Null,
+    EmptyValue,
     Map(HashMap<String, AstNode>),
     Array(Vec<AstNode>),
     Boolean(bool),
     Return(Box<AstNode>),
+    Buffer(Vec<u8>),
     Assignment {
         ident: Box<AstNode>,
         expr: Box<AstNode>,
@@ -125,5 +127,23 @@ pub fn parse_verb(pair: Pair<Rule>) -> Verb {
         "<=" => Verb::LessThanOrEqual,
         ">=" => Verb::LargerThanOrEqual,
         _ => panic!("Unexpected  verb: {}", pair.as_str()),
+    }
+}
+
+impl fmt::Display for AstNode {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        use AstNode::*;
+        let val = match self {
+            Ident(data) => data.to_string(),
+            Str(data) => data.to_string(),
+            Number(data) => format!("{}", data),
+            Null => String::from("nil"),
+            Map(data) => format!("{:#?}", data),
+            Boolean(data) => format!("{}", data),
+            Array(data) => format!("{:#?}", data),
+            Buffer(data) => format!("{:#?}", data),
+            _ => unreachable!(),
+        };
+        write!(f, "{}", val)
     }
 }

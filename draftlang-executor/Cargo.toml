@@ -10,3 +10,4 @@ draftlang_error = {path="../error", version="0.1.0"}
 draftlang-parser = {path="../draftlang-parser", version="0.1.0"}
 asdf-util = {path="../asdf-util", version="0.1.0"}
 color-print =  {workspace = true}
+structopt = {workspace = true}
