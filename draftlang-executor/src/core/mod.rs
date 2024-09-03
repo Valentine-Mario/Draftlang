@@ -5,5 +5,6 @@ mod env;
 mod fs;
 mod http;
 mod map;
+mod ssh;
 mod string;
 mod util;
