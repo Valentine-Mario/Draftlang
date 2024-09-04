@@ -7,8 +7,9 @@ use draftlang_error::Error;
 
 mod util;
 fn main() {
-    let raw_file = util::read_draftlang_file().expect("error reading DRAFTLANG file.");
     let args = cli::Args::new();
+
+    let raw_file = util::read_draftlang_file(&args.file_path).expect("error reading DRAFTLANG file.");
 
     println!("{:?}", args);
     match util::parse_file(&raw_file) {
