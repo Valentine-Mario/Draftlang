@@ -1,7 +1,9 @@
 use draftlang_error::Error;
-use draftlang_parser::{parse, types::DraftLangAst};
-use std::{fs, path::PathBuf};
-
+use draftlang_parser::{
+    parse,
+    types::{AstNode, DraftLangAst},
+};
+use std::{collections::HashMap, fs, path::PathBuf};
 
 pub fn read_draftlang_file(file_path: &PathBuf) -> Result<String, Error> {
     match fs::read_to_string(file_path) {
@@ -14,4 +16,46 @@ pub fn read_draftlang_file(file_path: &PathBuf) -> Result<String, Error> {
 
 pub fn parse_file(content: &str) -> Result<DraftLangAst, Error> {
     parse(content)
+}
+
+pub fn parse_imports(imports: Option<&Vec<AstNode>>) -> HashMap<String, Vec<String>> {
+    let mut value = HashMap::new();
+    if imports.is_none() {
+        value
+    } else {
+        let imports_list = imports.unwrap();
+        for item in imports_list {
+            match item {
+                AstNode::Import { funcs, module } => {
+                    let mut parent_list = vec![];
+                    match *module.clone() {
+                        AstNode::ModuleImport { parent, child } => {
+                            parent_list.push(parent.to_string());
+                            parent_list.push(child.to_string());
+                        }
+                        _ => unreachable!(),
+                    }
+                    for func in funcs {
+                        parent_list.push(func.to_string());
+                        value.insert(func.to_string(), parent_list.clone());
+                    }
+                }
+                _ => unreachable!(),
+            }
+        }
+        value
+    }
+}
+
+pub fn parse_global_scope(global_scope: Vec<AstNode>) -> HashMap<String, AstNode> {
+    let mut value = HashMap::new();
+    for item in global_scope {
+        match item {
+            AstNode::Assignment { ident, expr } => {
+                value.insert(ident.to_string(), *expr.clone());
+            }
+            _ => unreachable!(),
+        }
+    }
+    value
 }

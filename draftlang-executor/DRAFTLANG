@@ -1,12 +1,99 @@
 [draft]
-import mkfile, mkdir from core::fs
+import mkdir, mkfile from core::file
+import get from core::http
+import fetch from core::http
 
-func create_env(){
-    name= ".env"
-    mkfile(name)
+# this is a comment
+k="boy"
+low =23
+boys = ["value", 34, [false, nil]]
+
+
+func add(a, b){
+l=11
+k="guy"
+
+for i, j in value{
+   
+   bad = "bad"
+   for p, val in item {
+      print(val)
+   }
+   }
+  b=factor()
+  c= fast() |> pase(1, 2, 3)
+  return c
 }
+
+func values(a, b, c){
+   for v, l in open {
+      return v
+   }
+   return %{
+      "a":a,
+      "b":b,
+      "c":c
+   }
+}
+
+func later(){
+   add(1, 5) |> batch() |> kid()
+   blind()
+   120
+   read= all_values
+   lady = %{
+      "hello":1
+   }
+   %{}
+   if( a and b != c or c==d){
+      l="boy"
+      s= loader()
+   }elif(a or b){
+      y= "hello"
+      v=1200
+   }elif(false){
+
+   }else{
+      b=call()
+      if (c){
+         
+      }
+   }
+   return "boy"
+}
+
+func stuff(index, inc, dec){
+   y= "hello"
+   v=1200
+   print(index, inc)
+   return v
+   fic = fic(a, c)|>down()|>har()|>catt(e, me)
+   help()
+   if(item == 2){
+      print(item)
+   }
+   num=  add(1, 2)
+}
+
+func goat(config){
+   print(config)
+}
+
+func well(num, isTRue){
+   print(num, isTRue)
+}
+
+config= %{
+   "1":"boys",
+   "2": %{
+      "true": "girl"
+   }
+}
+
 [draft]
 
 {
-    "setup": create_env()
+   "hello":stuff(1, 4, 5),
+   "get":well(1, true) && later() && add(1, 2, 3),
+   "my": goat(%{"key": 1})
 }
