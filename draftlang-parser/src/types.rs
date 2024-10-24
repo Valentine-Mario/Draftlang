@@ -22,7 +22,7 @@ impl DraftLangAst {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct FunctionCall {
     pub name: Box<AstNode>,
     pub params: Vec<AstNode>,
@@ -44,7 +44,7 @@ impl FunctionCall {
 /// since elif is just a kind of if statement
 /// With the structure (condition, expression_block)
 /// While the else block is the fallback block
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct IfExpr {
     pub if_expr: Vec<(Vec<IfCondition>, Vec<AstNode>)>,
     pub executed: bool,
@@ -55,14 +55,14 @@ pub struct IfExpr {
 //take for example if(a != b) the following enum would be (ident(a) some(verb::not_equal), some(ident(b)) )
 //but in situations where say if(a) => (ident(a) None, None)
 //in between 2 expressions we have the and|or verb
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum IfCondition {
     Expr((AstNode, Option<Verb>, Option<AstNode>)),
     Cond(Verb),
 }
 
 ///These are the AST tokens for draftlang
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum AstNode {
     Ident(String),
     Str(String),
@@ -100,7 +100,7 @@ pub enum AstNode {
     IfExpresion(IfExpr),
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum Verb {
     Plus,
     NotEqual,
