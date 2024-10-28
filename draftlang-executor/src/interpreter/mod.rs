@@ -5,10 +5,12 @@ use std::collections::HashMap;
 use draftlang_parser::types::AstNode;
 use types::FunctionExecxutor;
 
+use crate::util;
+
 impl FunctionExecxutor {
     pub fn new(
         scripts: HashMap<String, Vec<AstNode>>,
-        imports: HashMap<String, Vec<String>>,
+        mut imports: HashMap<String, Vec<String>>,
         name: AstNode,
         parameters: Vec<AstNode>,
         function_body: Vec<AstNode>,
@@ -30,6 +32,8 @@ impl FunctionExecxutor {
             }
             _ => unreachable!(),
         }
+
+        imports.extend(util::append_default_import());
         FunctionExecxutor {
             scripts,
             name,

@@ -47,6 +47,24 @@ pub fn parse_imports(imports: Option<&Vec<AstNode>>) -> HashMap<String, Vec<Stri
     }
 }
 
+pub fn append_default_import() -> HashMap<String, Vec<String>> {
+    let mut value = HashMap::new();
+    const DEFAULT_IMPORTS: [[&str; 3]; 2] =
+        [["core", "default", "print"], ["core", "eval", "exec"]];
+
+    for item in DEFAULT_IMPORTS {
+        value.insert(
+            item[2].to_string(),
+            vec![
+                item[0].to_string(),
+                item[1].to_string(),
+                item[2].to_string(),
+            ],
+        );
+    }
+    value
+}
+
 pub fn parse_global_scope(global_scope: Vec<AstNode>) -> HashMap<String, AstNode> {
     let mut value = HashMap::new();
     for item in global_scope {
