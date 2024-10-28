@@ -2,6 +2,7 @@
 import mkdir, mkfile from core::file
 import get from core::http
 import fetch from core::http
+import str_len from core::string
 
 # this is a comment
 k="boy"
