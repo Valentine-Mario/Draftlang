@@ -1,6 +1,7 @@
 mod cli;
 mod core;
 mod interpreter;
+mod types;
 
 use color_print::cprintln;
 use draftlang_error::Error;

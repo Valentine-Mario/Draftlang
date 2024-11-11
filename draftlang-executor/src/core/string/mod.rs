@@ -1,20 +1,5 @@
 use draftlang_parser::types::AstNode;
-
 pub(crate) mod utils;
-
-fn check_if_string(item: &AstNode) -> bool {
-    match item {
-        AstNode::Str(_) => true,
-        _ => false,
-    }
-}
-
-fn get_string_value(item: &AstNode) -> String {
-    match item {
-        AstNode::Str(value) => value.to_string(),
-        _ => "".to_string(),
-    }
-}
 
 /// The string module provides functions to manipulate strings
 ///

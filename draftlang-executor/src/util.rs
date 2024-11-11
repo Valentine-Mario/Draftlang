@@ -77,18 +77,3 @@ pub fn parse_global_scope(global_scope: Vec<AstNode>) -> HashMap<String, AstNode
     }
     value
 }
-
-pub fn check_same_type(arr: &[AstNode]) -> bool {
-    let first_variant = arr.first();
-    arr.iter().all(|x| {
-        matches!(
-            (first_variant, x),
-            (Some(AstNode::Number(_)), AstNode::Number(_))
-                | (Some(AstNode::Str(_)), AstNode::Str(_))
-                | (Some(AstNode::Boolean(_)), AstNode::Boolean(_))
-                | (Some(AstNode::Map(_)), AstNode::Map(_))
-                | (Some(AstNode::Buffer(_)), AstNode::Buffer(_))
-                | (Some(AstNode::Array(_)), AstNode::Array(_))
-        )
-    })
-}
