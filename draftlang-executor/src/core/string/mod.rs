@@ -6,7 +6,7 @@ pub(crate) mod utils;
 /// # Examples
 ///
 ///
-pub fn string(ident: &str, payload: &Vec<AstNode>) -> AstNode {
+pub fn string(ident: &str, payload: &[AstNode]) -> AstNode {
     match ident {
         "str_len" => utils::str_len(payload),
         "str_concat" => utils::str_concat(payload),
