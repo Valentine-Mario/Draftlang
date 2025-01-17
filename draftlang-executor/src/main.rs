@@ -26,7 +26,7 @@ fn main() {
 
             function.unwrap().iter().for_each(|(name, parameters)| {
                 let function_body = ast.script.get(&name.clone().to_string()).unwrap();
-                let executor = interpreter::types::FunctionExecxutor::new(
+                let mut executor = interpreter::types::FunctionExecxutor::new(
                     ast.script.clone(),
                     parsed_import.clone(),
                     name.clone(),

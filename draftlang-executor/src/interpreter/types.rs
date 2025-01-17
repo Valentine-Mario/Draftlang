@@ -11,6 +11,6 @@ pub struct FunctionExecxutor {
     pub function_scope: HashMap<String, AstNode>,
     pub global_scope: HashMap<String, AstNode>,
     pub function_body: Vec<AstNode>,
-    pub return_value: AstNode,
+    pub return_value: Option<AstNode>,
     pub import_value: HashMap<String, Vec<String>>,
 }

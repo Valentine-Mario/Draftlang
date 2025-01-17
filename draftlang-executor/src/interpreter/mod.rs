@@ -41,9 +41,47 @@ impl FunctionExecxutor {
             function_scope,
             global_scope,
             function_body,
-            return_value: AstNode::EmptyValue,
+            return_value: None,
             import_value: imports,
         }
     }
-    pub fn execute(&self) {}
+    ///This function would execute the given function body of the function
+    ///currently stored in the `FunctionExecxutor`.
+    ///
+    ///The function body is expected to be a vec of `AstNode` and
+    ///the execution of the function would involve transversing the
+    ///vec of `AstNode` and executing the function accordingly.
+    ///
+    ///The function would return a value which is a `AstNode` which
+    ///is the value of the last expression in the `AstNode` vec
+    ///
+    ///# Panics
+    ///
+    ///This function would panic if the `AstNode` stored in the
+    ///function is not a `Function` like `AstNode`.
+    pub fn execute(&mut self) {
+        match &self.function_body[0] {
+            AstNode::Function {
+                name: _,
+                params: _,
+                expr: function_expressions,
+            } => {
+                for expression in function_expressions {
+                    match expression {
+                        AstNode::Assignment { ident, expr } => {
+                            let variable_name = ident.to_string();
+                            self.function_scope
+                                .insert(variable_name, expr.as_ref().to_owned());
+                            println!("Function Scope {:#?}", self.function_scope);
+                        }
+                        _ => {}
+                    }
+                }
+            }
+            _ => unreachable!(),
+        }
+    }
+
+    pub fn execute_function(&mut self) {}
+    pub fn extract_types(&mut self) {}
 }
