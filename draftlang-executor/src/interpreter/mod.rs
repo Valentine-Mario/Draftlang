@@ -8,6 +8,20 @@ use types::FunctionExecxutor;
 use crate::util;
 
 impl FunctionExecxutor {
+    /// Create a new instance of the FunctionExecutor
+    ///
+    /// # Parameters
+    ///
+    /// * `scripts`: The scripts that would be executed by the function
+    /// * `imports`: The imports that are defined in the function scope
+    /// * `name`: The name of the function
+    /// * `parameters`: The parameters of the function
+    /// * `function_body`: The body of the function
+    /// * `global_scope`: The global scope of the function
+    ///
+    /// # Returns
+    ///
+    /// A new instance of FunctionExecutor
     pub fn new(
         scripts: HashMap<String, Vec<AstNode>>,
         mut imports: HashMap<String, Vec<String>>,
@@ -45,20 +59,13 @@ impl FunctionExecxutor {
             import_value: imports,
         }
     }
-    ///This function would execute the given function body of the function
-    ///currently stored in the `FunctionExecxutor`.
-    ///
-    ///The function body is expected to be a vec of `AstNode` and
-    ///the execution of the function would involve transversing the
-    ///vec of `AstNode` and executing the function accordingly.
-    ///
-    ///The function would return a value which is a `AstNode` which
-    ///is the value of the last expression in the `AstNode` vec
-    ///
-    ///# Panics
-    ///
-    ///This function would panic if the `AstNode` stored in the
-    ///function is not a `Function` like `AstNode`.
+   
+    ///Execute the function body by iterating over each expression.
+    ///Each expression could be either a variable assignment, an if expression,
+    ///a for loop, a return statement or a function call.
+    ///The function scope would be mutated accordingly.
+    ///The return value would be the value of the last expression to be evaluated.
+    
     pub fn execute(&mut self) {
         match &self.function_body[0] {
             AstNode::Function {
@@ -73,7 +80,12 @@ impl FunctionExecxutor {
                             self.function_scope
                                 .insert(variable_name, expr.as_ref().to_owned());
                             println!("Function Scope {:#?}", self.function_scope);
+                        },
+                        AstNode::IfExpresion(condition)=>{},
+                        AstNode::ForLoop { ident, range_value:range, expr: loop_expression }=>{
+
                         }
+                        AstNode::Return(expr)=>self.return_value=Some(*expr.clone()),
                         _ => {}
                     }
                 }
