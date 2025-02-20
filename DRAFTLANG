@@ -75,6 +75,17 @@ func stuff(index, inc, dec){
    num=  add(1, 2)
 }
 
+
+func goat(config){
+   value = [1,2, 3]
+   for i, j in value{
+     b = 1
+   }
+   for index, val in boys{
+      
+   }
+   return config
+}
 config= %{
    "1":"boys",
    "2": %{
@@ -85,7 +96,7 @@ config= %{
 [draft]
 
 {
-   "hello":stuff(),
+   "hello":stuff("hello", 1, 3),
    "get":well(1, true) && later() && add(1, 2, 3),
    "my": goat(%{"key": 1})
 }

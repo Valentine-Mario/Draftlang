@@ -92,7 +92,7 @@ impl FunctionExecxutor {
                         } => {
                             let index = &ident.0;
                             let value = &ident.1;
-                            let mut range_value = &AstNode::EmptyValue;
+                            let mut range_item = &AstNode::EmptyValue;
                             let cloned_func_scope = self.function_scope.clone();
                             let cloned_global_scope = self.global_scope.clone();
 
@@ -103,11 +103,11 @@ impl FunctionExecxutor {
                                     match variable_ref {
                                         // If the variable is found in the function scope, set it as the range value
                                         Some(variable_ref) => {
-                                            range_value = variable_ref;
+                                            range_item = variable_ref;
                                         }
                                         // If not found in the function scope, attempt to retrieve it from the global scope
                                         None => {
-                                            range_value = cloned_global_scope
+                                            range_item = cloned_global_scope
                                                 .get(&ident.to_string())
                                                 .unwrap();
                                         }
@@ -115,18 +115,18 @@ impl FunctionExecxutor {
                                 }
                                 // If the range is an array, set it as the range value
                                 AstNode::Array(_array) => {
-                                    range_value = range;
+                                    range_item = range;
                                 }
                                 // If the range is a string, set it as the range value
                                 AstNode::Str(_str) => {
-                                    range_value = range;
+                                    range_item = range;
                                 }
                                 //if range is neither an array or a string panic
                                 _ => {
                                     panic!("Invalid range type");
                                 }
                             }
-                            execute_loop(self, (index, value), loop_expression, range_value);
+                            execute_loop(self, (index, value), loop_expression, range_item);
                         }
                         AstNode::Return(expr) => self.return_value = Some(*expr.clone()),
                         _ => {}
@@ -144,7 +144,7 @@ impl FunctionExecxutor {
 fn execute_loop(
     function: &mut FunctionExecxutor,
     range_pointers: (&AstNode, &AstNode),
-    loop_body: &Vec<AstNode>,
+    loop_body: &[AstNode],
     range: &AstNode,
 ) {
     //iterate through the range item, and use the range pointer to update the function scope through the mut ref
