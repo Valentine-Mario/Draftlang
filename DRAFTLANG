@@ -8,7 +8,6 @@ k="boy"
 low =23
 boys = ["value", 34, [false, nil]]
 
-
 func add(a, b){
 l=11
 k="guy"
@@ -77,12 +76,19 @@ func stuff(index, inc, dec){
 
 
 func goat(config){
-   value = [1,2, 3]
-   for i, j in value{
+   value = [1,2, 3, "hello"]
+   value2 = value
+   value3 = value
+   for i, j in value3{
      b = 1
    }
    for index, val in boys{
       
+   }
+   girls = boys
+
+   for l, p in girls {
+
    }
    return config
 }

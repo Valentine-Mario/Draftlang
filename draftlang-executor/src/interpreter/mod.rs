@@ -1,5 +1,6 @@
 pub mod types;
 
+use core::panic;
 use std::collections::HashMap;
 
 use draftlang_parser::types::AstNode;
@@ -90,43 +91,25 @@ impl FunctionExecxutor {
                             range_value: range,
                             expr: loop_expression,
                         } => {
-                            let index = &ident.0;
-                            let value = &ident.1;
-                            let mut range_item = &AstNode::EmptyValue;
-                            let cloned_func_scope = self.function_scope.clone();
-                            let cloned_global_scope = self.global_scope.clone();
+                            // Extract the index and value identifiers from the loop's 'ident' tuple.
+                            let index_name = &ident.0;
+                            let value_name = &ident.1;
 
-                            match range.as_ref() {
-                                AstNode::Ident(ident) => {
-                                    // Attempt to retrieve the range value from the function scope
-                                    let variable_ref = cloned_func_scope.get(&ident.to_string());
-                                    match variable_ref {
-                                        // If the variable is found in the function scope, set it as the range value
-                                        Some(variable_ref) => {
-                                            range_item = variable_ref;
-                                        }
-                                        // If not found in the function scope, attempt to retrieve it from the global scope
-                                        None => {
-                                            range_item = cloned_global_scope
-                                                .get(&ident.to_string())
-                                                .unwrap();
-                                        }
-                                    }
-                                }
-                                // If the range is an array, set it as the range value
-                                AstNode::Array(_array) => {
-                                    range_item = range;
-                                }
-                                // If the range is a string, set it as the range value
-                                AstNode::Str(_str) => {
-                                    range_item = range;
-                                }
-                                //if range is neither an array or a string panic
-                                _ => {
-                                    panic!("Invalid range type");
-                                }
-                            }
-                            execute_loop(self, (index, value), loop_expression, range_item);
+                            // Determine the range value for the loop.
+                            // If it's an identifier, retrieve its value from the function scope.
+                            // Otherwise, use the range's original value.
+                            let range_value = match range.as_ref() {
+                                AstNode::Ident(_) => get_ident_value(self, range),
+                                _ => range.as_ref().to_owned(),
+                            };
+
+                            // Execute the loop with the resolved index and value names, loop expression, and range value.
+                            execute_loop(
+                                self,
+                                (index_name, value_name),
+                                loop_expression,
+                                &range_value,
+                            );
                         }
                         AstNode::Return(expr) => self.return_value = Some(*expr.clone()),
                         _ => {}
@@ -141,12 +124,57 @@ impl FunctionExecxutor {
     pub fn extract_types(&mut self) {}
 }
 
+///This function is used to get the value of an identifier in a function.
+///It looks up the value of the identifier in the function scope first,
+///if it can't find it, then it looks up the value in the global scope.
+///If it can't find it in the global scope, it panics.
+/// ///# Parameters
+///
+///* `function`: The function executor instance
+///* `ident`: The identifier to look up
+///
+///# Returns
+///
+///The value of the identifier
+fn get_ident_value(function: &FunctionExecxutor, ident: &AstNode) -> AstNode {
+    let var_item = function
+        .function_scope
+        .get(&ident.to_string())
+        .or_else(|| function.global_scope.get(&ident.to_string()))
+        .cloned()
+        .unwrap_or_else(|| {
+            panic!("Variable not found. Make sure you have declared the variable before using it")
+        });
+
+    let value = match var_item {
+        AstNode::Ident(_) => {
+            //If the value is an identifier, recursively call `get_ident_value` to get the value.
+            get_ident_value(function, &var_item)
+        }
+        _ => {
+            //If the value is not an identifier, just return the value.
+            var_item
+        }
+    };
+
+    return value;
+}
+
 fn execute_loop(
     function: &mut FunctionExecxutor,
     range_pointers: (&AstNode, &AstNode),
     loop_body: &[AstNode],
     range: &AstNode,
 ) {
+    match range {
+        AstNode::Array(array) => {}
+        AstNode::Str(str_data) => {}
+        AstNode::Map(map_item) => {}
+        AstNode::Number(num_data) => {}
+        _ => {
+            panic!("Invalid range type")
+        }
+    }
     //iterate through the range item, and use the range pointer to update the function scope through the mut ref
     function
         .function_scope
