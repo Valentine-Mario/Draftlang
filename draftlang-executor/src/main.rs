@@ -2,11 +2,12 @@ mod cli;
 mod core;
 mod interpreter;
 mod types;
+mod utils;
 
 use color_print::cprintln;
 use draftlang_error::Error;
+use utils::parser_utils;
 
-mod util;
 /// The main entry point for the application.
 ///
 /// It takes a file path as an argument and execute the draftlang
@@ -20,15 +21,15 @@ fn main() {
     let args = cli::Args::new();
 
     let raw_file =
-        util::read_draftlang_file(&args.file_path).expect("error reading DRAFTLANG file.");
+        parser_utils::read_draftlang_file(&args.file_path).expect("error reading DRAFTLANG file.");
 
     // Parse the draftlang file and execute the specified function.
-    match util::parse_file(&raw_file) {
+    match parser_utils::parse_file(&raw_file) {
         // If parsing is successful, proceed with execution
         Ok(ast) => {
             // Retrieve and parse import statements from the script
             let imports = ast.script.get("import");
-            let parsed_import = util::parse_imports(imports);
+            let parsed_import = parser_utils::parse_imports(imports);
 
             // Retrieve the function key from the JSON object
             let function = ast.json.data.get(&args.func);
@@ -51,7 +52,7 @@ fn main() {
                     name.clone(),
                     parameters.clone(),
                     function_body.clone(),
-                    util::parse_global_scope(global_scope.clone()),
+                    parser_utils::parse_global_scope(global_scope.clone()),
                 );
 
                 // Execute the function

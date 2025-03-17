@@ -64,6 +64,15 @@ func batch(){
 func stuff(index, inc, dec){
    y= "hello"
    v=1200
+   value = [1,2, 3, true, "hello"]
+   boy = %{
+      "a":a,
+      "b":234,
+      "c":["hi", false, nil, goat]
+   }
+   for test, data in boy{
+      holla()
+   }
    print(index, inc)
    return v
    fic = fic(a, c)|>down()|>har()|>catt(e, me)
