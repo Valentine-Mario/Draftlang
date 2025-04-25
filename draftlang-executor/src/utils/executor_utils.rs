@@ -1,4 +1,4 @@
-use draftlang_parser::types::AstNode;
+use draftlang_parser::types::{AstNode, IfCondition, IfExpr, Verb};
 
 use crate::interpreter::types::FunctionExecxutor;
 
@@ -58,7 +58,9 @@ pub fn execute_body(function: &mut FunctionExecxutor, body: &Vec<AstNode>) {
                     .function_scope
                     .insert(variable_name, expr.as_ref().to_owned());
             }
-            AstNode::IfExpresion(condition) => {}
+            AstNode::IfExpresion(condition) => {
+                execute_condition(condition, function);
+            }
             AstNode::ForLoop {
                 ident,
                 range_value: range,
@@ -90,6 +92,100 @@ pub fn execute_body(function: &mut FunctionExecxutor, body: &Vec<AstNode>) {
     }
 }
 
+/// Execute an if expression within a function.
+///
+/// This function evaluates the conditions in the `if_expr` of the given
+/// `IfExpr` and executes the corresponding block of expressions if the condition
+/// evaluates to true. If none of the conditions are met, it executes the fallback
+/// block of the `IfExpr`.
+///
+/// # Parameters
+///
+/// * `condition`: A mutable reference to the `IfExpr`, containing the if conditions
+///   and expression blocks.
+/// * `function`: A mutable reference to the `FunctionExecxutor`, which holds the
+///   current execution context and scope.
+
+pub fn execute_condition(condition: &IfExpr, function: &mut FunctionExecxutor) {
+    let if_expr = &condition.if_expr;
+    let condition = &mut condition.clone();
+    for cond_block in if_expr {
+        let execute_true = retrieve_if_condition(&cond_block.0, function);
+        if execute_true {
+            execute_body(function, &cond_block.1);
+            condition.executed = true;
+        }
+    }
+    if !condition.executed {
+        let fallback = &condition.fallback;
+        execute_body(function, &fallback);
+        condition.executed = true;
+    }
+}
+
+fn retrieve_if_condition(expression: &Vec<IfCondition>, function: &mut FunctionExecxutor) -> bool {
+    println!("retrieve_if_condition {:?}", expression);
+    for item in expression {
+        match item {
+            IfCondition::Expr((left, verb, right)) => {
+                let left_value = get_ident_value(function, left);
+                let right_value = match right {
+                    Some(right) => get_ident_value(function, right),
+                    None => AstNode::Null,
+                };
+                match verb {
+                    Some(verb) => {
+                        match verb {
+                            Verb::Equal => {
+                                if left_value != right_value {
+                                    return false;
+                                }
+                            }
+                            Verb::NotEqual => {
+                                if left_value == right_value {
+                                    return false;
+                                }
+                            }
+                            Verb::LargerThanOrEqual => {
+                                //todo: write utility function to compare values
+                                if left_value >= right_value {
+                                    return false;
+                                }
+                            }
+                            Verb::LessThan => {
+                                if left_value <= right_value {
+                                    return false;
+                                }
+                            }
+                            Verb::LessThanOrEqual => {
+                                if left_value < right_value {
+                                    return false;
+                                }
+                            }
+                            _ => unreachable!(),
+                        }
+                    }
+                    None => {}
+                }
+            }
+            IfCondition::Cond(cond) => match cond {
+                Verb::And => {
+                    if !retrieve_if_condition(&expression[1..].to_vec(), function) {
+                        return false;
+                    }
+                }
+                Verb::Or => {
+                    if retrieve_if_condition(&expression[1..].to_vec(), function) {
+                        return true;
+                    }
+                }
+                _ => unreachable!(),
+            },
+        }
+    }
+
+    return true;
+}
 /// Execute a loop with a given range.
 ///
 /// This function will iterate over the range, assigning the current value to the variable
