@@ -85,6 +85,12 @@ func stuff(index, inc, dec){
 
 
 func goat(config){
+   item = 4
+   fought = 11 
+   uv = "hola"
+   if(item == 2 or fought == 3 and uv == "hola"){
+      print(item)
+   }
    value = [1,2, 3, "hello"]
    value2 = value
    value3 = value

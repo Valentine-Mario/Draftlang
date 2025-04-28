@@ -51,7 +51,7 @@ pub struct IfExpr {
     pub fallback: Vec<AstNode>,
 }
 
-//here the expr follows (astnode optional<vern> optional<astnode>)
+//here the expr follows (astnode optional<verb> optional<astnode>)
 //take for example if(a != b) the following enum would be (ident(a) some(verb::not_equal), some(ident(b)) )
 //but in situations where say if(a) => (ident(a) None, None)
 //in between 2 expressions we have the and|or verb
