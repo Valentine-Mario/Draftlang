@@ -96,6 +96,16 @@ pub fn execute_body(function: &mut FunctionExecxutor, body: &Vec<AstNode>) {
                     &range_value,
                 );
             }
+            AstNode::FunctionCaller(func) => {
+                let function_name = func.name.to_string();
+                let function_params = &func.params;
+                //pipes point to the function's pipe expressions if any
+                let pipes = &func.pipe;
+                // Check if the function is imported
+                if function.import_value.contains_key(&function_name) {
+                    // If the function is imported, execute it with the provided parameters.
+                }
+            }
             AstNode::Return(expr) => function.return_value = Some(*expr.clone()),
             _ => {}
         }
