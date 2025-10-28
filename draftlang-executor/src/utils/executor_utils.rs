@@ -60,6 +60,7 @@ pub fn get_ident_value(function: &FunctionExecxutor, ident: &AstNode) -> AstNode
 /// * `function`: The function executor instance
 /// * `body`: The body of the function to execute
 pub fn execute_body(function: &mut FunctionExecxutor, body: &Vec<AstNode>) {
+    //todo: return items from the body
     for expression in body {
         match expression {
             AstNode::Assignment { ident, expr } => {
@@ -97,13 +98,32 @@ pub fn execute_body(function: &mut FunctionExecxutor, body: &Vec<AstNode>) {
                 );
             }
             AstNode::FunctionCaller(func) => {
-                let function_name = func.name.to_string();
+                let function_name = &func.name;
                 let function_params = &func.params;
                 //pipes point to the function's pipe expressions if any
-                let pipes = &func.pipe;
+                // let pipes = &func.pipe; //pipes not supported now
                 // Check if the function is imported
-                if function.import_value.contains_key(&function_name) {
+                if function
+                    .import_value
+                    .contains_key(&function_name.clone().to_string())
+                {
                     // If the function is imported, execute it with the provided parameters.
+                } else {
+                    //find the function in the list of available functions
+                    let function_body = function
+                        .scripts
+                        .get(&function_name.clone().to_string())
+                        .expect("Function not found");
+                    let mut function_executor = FunctionExecxutor::new(
+                        function.scripts.clone(),
+                        function.import_value.clone(),
+                        *function_name.clone(),
+                        function_params.clone(),
+                        function_body.clone(),
+                        function.global_scope.clone(),
+                    );
+                    execute_body(&mut function_executor, function_body);
+                    let returned_val = function_executor.return_value.clone();
                 }
             }
             AstNode::Return(expr) => function.return_value = Some(*expr.clone()),
