@@ -34,7 +34,7 @@ pub fn execute_condition(condition: &IfExpr, function: &mut FunctionExecxutor) {
     }
     if !condition.executed {
         let fallback = &condition.fallback;
-        execute_body(function, &fallback);
+        execute_body(function, fallback);
         condition.executed = true;
     }
 }
@@ -73,5 +73,5 @@ fn retrieve_if_condition(expression: &Vec<IfCondition>, function: &mut FunctionE
         }
     }
 
-    return result;
+    result
 }

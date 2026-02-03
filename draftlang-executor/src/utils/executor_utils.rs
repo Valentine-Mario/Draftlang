@@ -45,7 +45,7 @@ pub fn get_ident_value(function: &FunctionExecxutor, ident: &AstNode) -> AstNode
         }
     };
 
-    return value;
+    value
 }
 
 /// Execute the given body of a function.
@@ -59,7 +59,8 @@ pub fn get_ident_value(function: &FunctionExecxutor, ident: &AstNode) -> AstNode
 ///
 /// * `function`: The function executor instance
 /// * `body`: The body of the function to execute
-pub fn execute_body(function: &mut FunctionExecxutor, body: &Vec<AstNode>) {
+pub fn execute_body(function: &mut FunctionExecxutor, body: &Vec<AstNode>) -> Option<AstNode> {
+    let mut return_value: Option<AstNode> = None;
     //todo: return items from the body
     for expression in body {
         match expression {
@@ -122,12 +123,17 @@ pub fn execute_body(function: &mut FunctionExecxutor, body: &Vec<AstNode>) {
                         function_body.clone(),
                         function.global_scope.clone(),
                     );
-                    execute_body(&mut function_executor, function_body);
-                    let returned_val = function_executor.return_value.clone();
+                    let _returned_value = execute_body(&mut function_executor, function_body);
                 }
             }
-            AstNode::Return(expr) => function.return_value = Some(*expr.clone()),
+            AstNode::Return(expr) => {
+                //when a return statement is encountered, assign it and break out
+                return_value = Some(*expr.clone());
+                function.return_value = Some(*expr.clone());
+                break;
+            }
             _ => {}
         }
     }
+    return_value
 }
